@@ -65,5 +65,35 @@ namespace Variations
 
     }
 
+    public class S : Squares
+    {
+    
+        public S()
+        {
 
+        }
+
+
+
+    }
+
+    public class Z : Squares
+    {
+
+        public Z()
+        {
+
+        }
+
+    }
+
+    public class T : Squares
+    {
+
+        public T()
+        {
+
+        }
+
+    }
 }
