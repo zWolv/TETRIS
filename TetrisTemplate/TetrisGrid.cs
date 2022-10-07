@@ -30,7 +30,8 @@ class TetrisGrid
         Clear();
     }
 
-    int[,] gridState = new int[20, 10];
+    bool[,]movementGrid = new bool[20, 10];
+    Color[,] colorGrid = new Color[20, 10];
     
 
     /// <summary>

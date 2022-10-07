@@ -38,13 +38,7 @@ namespace Variations
 
     public class J : Squares
     {
-        bool[,] layoutJ = new bool[,]
-        {
-            {false, false, true, false},
-            {false, false, true, false},
-            {false, false, true, false},
-            {false, true, true, false}
-        };
+        
 
     public J()
         {
@@ -52,29 +46,45 @@ namespace Variations
         }
         //color = new Color.DarkBlue;
 
+        bool[,] layoutJ = new bool[,]
+        {
+            {false, false, true, false},
+            {false, false, true, false},
+            {false, false, true, false},
+            {false, true, true, false}
+        };
     }
 
 
     public class O : Squares
     {
-        bool[,] layoutO = new bool[,]
-        {
-            {false, false, false, false},
-            {false, true, true, false},
-            {false, true, true, false},
-            {false, false, false, false}
-        };
+       
 
         public O()
         {
 
         }
-
         // color = new Color.Yellow;
+
+        bool[,] layoutO = new bool[,]
+       {
+            {false, false, false, false},
+            {false, true, true, false},
+            {false, true, true, false},
+            {false, false, false, false}
+       };
     }
 
     public class I : Squares
     {
+        
+
+        public I()
+        {
+
+        }
+        // color = new Color.LightBlue;
+
         bool[,] layoutI = new bool[,]
         {
             {false, true, false, false},
@@ -82,23 +92,11 @@ namespace Variations
             {false, true, false, false},
             {false, true, false, false}
         };
-
-        public I()
-        {
-
-        }
-        // color = new Color.LightBlue;
     }
 
     public class S : Squares
     {
-        bool[,] layoutS = new bool[,]
-        {
-            {false, false, false, false},
-            {false, false, true, true},
-            {true, true, false, false},
-            {false, false, false, false}
-        };
+        
 
         public S()
         {
@@ -106,17 +104,17 @@ namespace Variations
         }
         //color = new Color.LightGreen;
 
+        bool[,] layoutS = new bool[,]
+        {
+            {false, false, false, false},
+            {false, false, true, true},
+            {true, true, false, false},
+            {false, false, false, false}
+        };
     }
 
     public class Z : Squares
     {
-        bool[,] layoutZ = new bool[,]
-        {
-            {false, false, false, false},
-            {true, true, false, false},
-            {false, false, true, true},
-            {false, false, false, false}
-        };
 
         public Z()
         {
@@ -124,17 +122,18 @@ namespace Variations
         }
         // color = new Color.Red;
 
+        bool[,] layoutZ = new bool[,]
+        {
+            {false, false, false, false},
+            {true, true, false, false},
+            {false, false, true, true},
+            {false, false, false, false}
+        };
     }
 
     public class T : Squares
     {
-        bool[,] layoutT = new bool[,]
-        {
-            {false, false, false, false},
-            {false, true, true, true},
-            {false, false, true, false},
-            {false, false, false, false},
-        };
+        
 
         public T()
         {
@@ -142,10 +141,23 @@ namespace Variations
         }
         // color = new Color.Purple;
 
+        bool[,] layoutT = new bool[,]
+        {
+            {false, false, false, false},
+            {false, true, true, true},
+            {false, false, true, false},
+            {false, false, false, false},
+        };
     }
 
     public class U : Squares 
     {
+        
+        public U()
+        {
+
+        }
+
         bool[,] layoutU = new bool[,]
         {
             {false, false, false, false},
@@ -153,10 +165,5 @@ namespace Variations
             {true, true, true, false},
             {false, false, false, false}
         };
-
-        public U()
-        {
-
-        }
     }
 }
