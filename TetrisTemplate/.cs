@@ -25,40 +25,40 @@ namespace Variations
 
 
 
-    public class LShape : Squares
+    public class L : Squares
     {
 
 
-        public LShape()
+        public L()
         {
 
         }
     }
 
-    public class InvertedLShape : Squares
+    public class J : Squares
     {
 
-       public InvertedLShape()
+       public J()
         {
 
         }
     }
 
 
-    public class SquareShape : Squares
+    public class O : Squares
     {
 
-        public SquareShape()
+        public O()
         {
 
         }
 
     }
 
-    public class SquareLine : Squares
+    public class I : Squares
     {
 
-        public SquareLine()
+        public I()
         {
 
         }
