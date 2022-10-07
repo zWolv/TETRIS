@@ -1,10 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Variations
 {
@@ -33,6 +29,8 @@ namespace Variations
         {
 
         }
+        //color = new Color.Orange;
+
     }
 
     public class J : Squares
@@ -42,6 +40,8 @@ namespace Variations
         {
 
         }
+        //color = new Color.DarkBlue;
+
     }
 
 
@@ -53,6 +53,7 @@ namespace Variations
 
         }
 
+        // color = new Color.Yellow;
     }
 
     public class I : Squares
@@ -62,7 +63,7 @@ namespace Variations
         {
 
         }
-
+        // color = new Color.LightBlue;
     }
 
     public class S : Squares
@@ -72,8 +73,7 @@ namespace Variations
         {
 
         }
-
-
+        //color = new Color.LightGreen;
 
     }
 
@@ -84,6 +84,7 @@ namespace Variations
         {
 
         }
+        // color = new Color.Red;
 
     }
 
@@ -94,6 +95,7 @@ namespace Variations
         {
 
         }
+        // color = new Color.Purple;
 
     }
 }
