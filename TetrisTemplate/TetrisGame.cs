@@ -47,6 +47,9 @@ class TetrisGame : Game
         inputHelper = new InputHelper();
     }
 
+
+   
+
     protected override void LoadContent()
     {
         spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -54,6 +57,7 @@ class TetrisGame : Game
         // create and reset the game world
         gameWorld = new GameWorld();
         gameWorld.Reset();
+        gameWorld.Initialize();
     }
 
     protected override void Update(GameTime gameTime)

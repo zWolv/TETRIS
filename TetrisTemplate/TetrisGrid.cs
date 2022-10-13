@@ -1,12 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 
 /// <summary>
 /// A class for representing the Tetris playing grid.
 /// </summary>
 class TetrisGrid
 {
+
+    bool l = true;
     /// The sprite of a single empty cell in the grid.
     Texture2D emptyCell;
 
@@ -19,6 +23,7 @@ class TetrisGrid
     /// The number of grid elements in the y-direction.
     public int Height { get { return 20; } }
 
+    BlockVariations blocks;
     /// <summary>
     /// Creates a new TetrisGrid.
     /// </summary>
@@ -30,9 +35,96 @@ class TetrisGrid
         Clear();
     }
 
-    bool[,]movementGrid = new bool[20, 10];
+    bool[,] movementGrid = new bool[20, 10];
     Color[,] colorGrid = new Color[20, 10];
-    
+
+
+    public void Initialize()
+    {
+        blocks = new BlockVariations();
+
+        blocks.addBlocks("T");
+    }
+    /// <summary>
+    /// Updates the grid with new blocks
+    /// </summary>
+    public void moveBlocks()
+    {
+        if(l)
+        {
+            int x;
+            int y;
+
+            for (y = 0; y < 4; y++)
+            {
+                for (x = 0; x < 4; x++)
+                {
+                    movementGrid[y, x] = blocks.blockList[0].layout(x, y);
+                }
+            }
+            l = false;
+        }
+       
+    }
+
+
+
+    public void HandleInput(InputHelper inputHelper)
+    {
+        bool canMove = true;
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Left))
+        {
+            for (int i = 0; i < 20; i++) {
+            
+                for (int t = 0; t < 10; t++)
+                {
+                    if(movementGrid[i, t] && t == 0)
+                    {
+                        canMove = false;
+                        break;
+                       
+                    }  
+                    else if(t - 1 >= 0 && canMove)
+                    {
+                        if (movementGrid[i, t] == true)
+                        {
+                            movementGrid[i, t] = false;
+                            movementGrid[i, t - 1] = true;
+                        }
+                    }
+                }
+            }
+        }
+        
+        if(inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Right))
+        {
+            for (int i = 0; i < ; i++)
+            {
+                for (int t = 9; t >= 0; t--)
+                {
+                    if (movementGrid[i, t] && t == 9)
+                    {
+                        canMove = false;
+                        break;
+                    }
+                    else if (t + 1 <= 9 && canMove)
+                    {
+                        if (movementGrid[i, t])
+                        {
+                            movementGrid[i, t] = false;
+                            movementGrid[i, t + 1] = true;
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    public void Update(GameTime gameTime)
+    {
+        moveBlocks();
+    }
 
     /// <summary>
     /// Draws the grid on the screen.
@@ -41,13 +133,20 @@ class TetrisGrid
     /// <param name="spriteBatch">The SpriteBatch used for drawing sprites and text.</param>
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-        for (int i = 0; i < 600; i += 30)
+        
+        for (int i = 0; i < 20; i ++)
         {
-            for(int t = 0; t < 300; t += 30)
+            for(int t = 0; t < 10; t ++)
             {
-                spriteBatch.Draw(emptyCell, new Vector2((float)t, (float)i), Color.White);
-            }
- 
+                if(movementGrid[i, t] == true)
+                {
+                    spriteBatch.Draw(emptyCell, new Vector2((float)t * 30, (float)i * 30), Color.Red);
+                }
+                else
+                {
+                    spriteBatch.Draw(emptyCell, new Vector2((float)t * 30, (float)i * 30), Color.White);
+                }
+            }    
         }
     }
 

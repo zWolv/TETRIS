@@ -50,10 +50,18 @@ class GameWorld
 
     public void HandleInput(GameTime gameTime, InputHelper inputHelper)
     {
+        grid.HandleInput(inputHelper);
     }
 
+
+    // temp
+    public void Initialize()
+    {
+        grid.Initialize();
+    }
     public void Update(GameTime gameTime)
     {
+        grid.Update(gameTime);
     }
 
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
