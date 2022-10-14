@@ -76,8 +76,8 @@ using System.Collections.Generic;
         bool[,] layoutL = new bool[,] {
             {false, true, false, false},
             {false, true, false, false},
-            {false, true, false, false},
-            {false, true, true, false}
+            {false, true, true, false},
+            {false, false, false, false}
         };
 
         public L()
@@ -98,8 +98,8 @@ using System.Collections.Generic;
 {
             {false, false, true, false},
             {false, false, true, false},
-            {false, false, true, false},
-            {false, true, true, false}
+            {false, true, true, false},
+            {false, false, false, false}
 };
 
         public J()
@@ -121,9 +121,9 @@ using System.Collections.Generic;
     {
         bool[,] layoutO = new bool[,]
         {
+            {false, true, true, false},
+            {false, true, true, false},
             {false, false, false, false},
-            {false, true, true, false},
-            {false, true, true, false},
             {false, false, false, false}
         };
 
@@ -169,9 +169,9 @@ using System.Collections.Generic;
 
         bool[,] layoutS = new bool[,]
         {
-            {false, false, false, false},
             {false, false, true, true},
-            {true, true, false, false},
+            {false, true, true, false},
+            {false, false, false, false},
             {false, false, false, false}
         };
 
@@ -191,9 +191,9 @@ using System.Collections.Generic;
     {
         bool[,] layoutZ = new bool[,]
         {
-            {false, false, false, false},
             {true, true, false, false},
-            {false, false, true, true},
+            {false, true, true, false},
+            {false, false, false, false},
             {false, false, false, false}
         };
 

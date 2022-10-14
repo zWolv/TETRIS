@@ -43,7 +43,7 @@ class TetrisGrid
     {
         blocks = new BlockVariations();
 
-        blocks.addBlocks("T");
+        blocks.addBlocks("S");
     }
     /// <summary>
     /// Updates the grid with new blocks
