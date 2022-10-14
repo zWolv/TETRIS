@@ -48,7 +48,7 @@ class TetrisGrid
     /// <summary>
     /// Updates the grid with new blocks
     /// </summary>
-    public void moveBlocks()
+    public void drawBlocks()
     {
         if(l)
         {
@@ -75,39 +75,39 @@ class TetrisGrid
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Left))
         {
             for (int i = 0; i < 20; i++) {
-            
-                for (int t = 0; t < 10; t++)
+
+
+                if (movementGrid[i, 0])
                 {
-                    if(movementGrid[i, t] && t == 0)
+                    canMove = false;
+                }
+                else if(canMove)
+                {
+                    for (int t = 0; t < 10; t++)
                     {
-                        canMove = false;
-                        break;
-                       
-                    }  
-                    else if(t - 1 >= 0 && canMove)
-                    {
-                        if (movementGrid[i, t] == true)
+                        if (movementGrid[i, t])
                         {
                             movementGrid[i, t] = false;
                             movementGrid[i, t - 1] = true;
                         }
                     }
                 }
+                
             }
         }
         
         if(inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Right))
         {
-            for (int i = 0; i < ; i++)
+            for (int i = 0; i < 20; i++)
             {
-                for (int t = 9; t >= 0; t--)
+                if (movementGrid[i, 9]) 
                 {
-                    if (movementGrid[i, t] && t == 9)
-                    {
-                        canMove = false;
-                        break;
-                    }
-                    else if (t + 1 <= 9 && canMove)
+                    canMove = false;
+                }
+
+                if (canMove) 
+                {
+                    for (int t = 9; t >= 0; t--)
                     {
                         if (movementGrid[i, t])
                         {
@@ -116,6 +116,7 @@ class TetrisGrid
                         }
                     }
                 }
+               
             }
         }
 
@@ -123,7 +124,7 @@ class TetrisGrid
 
     public void Update(GameTime gameTime)
     {
-        moveBlocks();
+        drawBlocks();
     }
 
     /// <summary>
