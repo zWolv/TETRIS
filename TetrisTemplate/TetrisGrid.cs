@@ -9,8 +9,8 @@ using System.Collections.Generic;
 /// </summary>
 class TetrisGrid
 {
+    protected bool[,] movementGrid = new bool[20, 10];
 
-    bool l = true;
     /// The sprite of a single empty cell in the grid.
     Texture2D emptyCell;
 
@@ -23,7 +23,7 @@ class TetrisGrid
     /// The number of grid elements in the y-direction.
     public int Height { get { return 20; } }
 
-    BlockVariations blocks;
+    Blocks blocks;
     /// <summary>
     /// Creates a new TetrisGrid.
     /// </summary>
@@ -35,45 +35,57 @@ class TetrisGrid
         Clear();
     }
 
-    bool[,] movementGrid = new bool[20, 10];
+    
     Color[,] colorGrid = new Color[20, 10];
 
-
-    public void Initialize()
-    {
-        blocks = new BlockVariations();
-
-        blocks.addBlocks("S");
-    }
     /// <summary>
     /// Updates the grid with new blocks
     /// </summary>
-    public void drawBlocks()
-    {
-        if(l)
-        {
-            int x;
-            int y;
 
-            for (y = 0; y < 4; y++)
-            {
-                for (x = 0; x < 4; x++)
-                {
-                    movementGrid[y, x] = blocks.blockList[0].layout(x, y);
-                }
-            }
-            l = false;
-        }
+
+    //public void drawBlocks()
+    //{
+    //    if(l)
+    //    {
+    //        int x;
+    //        int y;
+
+    //        for (y = 0; y < 4; y++)
+    //        {
+    //            for (x = 0; x < 4; x++)
+    //            {
+    //                movementGrid[y, x] = blocks.blockList[0].layout(x, y);
+    //            }
+    //        }
+    //        l = false;
+    //    }
        
+    //}
+
+    public void Initialize()
+    {
+        blocks = new Blocks();
+        blocks.addBlocks("T");
     }
-
-
-    public bool canMove()
+    public bool canMoveLeft()
     {
         bool move = true;
         for(int i = 0; i < 20;i++)
         {
-            if (movementGrid[i,0] || movementGrid[i, 9])
+            if (movementGrid[i,0])
+            {
+                move = false;
+            }
+        }
+        return move;
+    }
+
+    public bool canMoveRight()
+    {
+        bool move = true;
+        for (int i = 0; i < 20; i++)
+        {
+            if (movementGrid[i, 9])
             {
                 move = false;
             }
@@ -83,40 +95,13 @@ class TetrisGrid
 
     public void HandleInput(InputHelper inputHelper)
     {
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Left))
-        {
-            for (int i = 0; i < 20; i++)
-            {
-                for (int t = 0; t < 10; t++)
-                {
-                    if (movementGrid[i, t] && canMove())
-                    {
-                        movementGrid[i, t] = false;
-                        movementGrid[i, t - 1] = true;
-                    }
-                }
-            }
-        }
-        
-        if(inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Right))
-        {
-            for (int i = 0; i < 20; i++)
-            {
-                for (int t = 9; t >= 0; t--)
-                {
-                    if (movementGrid[i, t] && canMove())
-                    {
-                        movementGrid[i, t] = false;
-                        movementGrid[i, t + 1] = true;
-                    }
-                }
-            }
-        }
+        blocks.HandleInput(inputHelper);
     }
 
     public void Update(GameTime gameTime)
     {
-        drawBlocks();
+        //drawBlocks();
+        blocks.Update();
     }
 
     /// <summary>
@@ -127,11 +112,13 @@ class TetrisGrid
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
         
-        for (int i = 0; i < 20; i ++)
+
+        for (int i = 0; i < Height; i++)
         {
-            for(int t = 0; t < 10; t ++)
+            for (int t = 0; t < Width; t++)
             {
-                if(movementGrid[i, t] == true)
+
+                if (movementGrid[i, t])
                 {
                     spriteBatch.Draw(emptyCell, new Vector2((float)t * 30, (float)i * 30), Color.Red);
                 }
@@ -139,8 +126,9 @@ class TetrisGrid
                 {
                     spriteBatch.Draw(emptyCell, new Vector2((float)t * 30, (float)i * 30), Color.White);
                 }
-            }    
+            }
         }
+        blocks.Draw(spriteBatch, emptyCell);
     }
 
     /// <summary>

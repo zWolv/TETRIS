@@ -53,8 +53,6 @@ class GameWorld
         grid.HandleInput(inputHelper);
     }
 
-
-    // temp
     public void Initialize()
     {
         grid.Initialize();
