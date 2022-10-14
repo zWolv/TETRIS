@@ -43,7 +43,7 @@ class TetrisGrid
     {
         blocks = new BlockVariations();
 
-        blocks.addBlocks("T");
+        blocks.addBlocks("L");
     }
     /// <summary>
     /// Updates the grid with new blocks
@@ -68,31 +68,36 @@ class TetrisGrid
     }
 
 
+    public bool canMove()
+    {
+        bool move = true;
+        for(int i = 0; i < 20;i++)
+        {
+            if (movementGrid[i,0] || movementGrid[i, 9])
+            {
+                move = false;
+            }
+        }
+        return move;
+    }
+
+
+
 
     public void HandleInput(InputHelper inputHelper)
     {
-        bool canMove = true;
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Left))
         {
-            for (int i = 0; i < 20; i++) {
-
-
-                if (movementGrid[i, 0])
+            for (int i = 0; i < 20; i++)
+            {
+                for (int t = 0; t < 10; t++)
                 {
-                    canMove = false;
-                }
-                else if(canMove)
-                {
-                    for (int t = 0; t < 10; t++)
+                    if (movementGrid[i, t] && canMove())
                     {
-                        if (movementGrid[i, t])
-                        {
-                            movementGrid[i, t] = false;
-                            movementGrid[i, t - 1] = true;
-                        }
+                        movementGrid[i, t] = false;
+                        movementGrid[i, t - 1] = true;
                     }
                 }
-                
             }
         }
         
@@ -100,26 +105,16 @@ class TetrisGrid
         {
             for (int i = 0; i < 20; i++)
             {
-                if (movementGrid[i, 9]) 
+                for (int t = 9; t >= 0; t--)
                 {
-                    canMove = false;
-                }
-
-                if (canMove) 
-                {
-                    for (int t = 9; t >= 0; t--)
+                    if (movementGrid[i, t] && canMove())
                     {
-                        if (movementGrid[i, t])
-                        {
-                            movementGrid[i, t] = false;
-                            movementGrid[i, t + 1] = true;
-                        }
+                        movementGrid[i, t] = false;
+                        movementGrid[i, t + 1] = true;
                     }
                 }
-               
             }
         }
-
     }
 
     public void Update(GameTime gameTime)
