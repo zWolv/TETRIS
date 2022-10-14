@@ -43,7 +43,7 @@ class TetrisGrid
     {
         blocks = new BlockVariations();
 
-        blocks.addBlocks("L");
+        blocks.addBlocks("S");
     }
     /// <summary>
     /// Updates the grid with new blocks
@@ -80,9 +80,6 @@ class TetrisGrid
         }
         return move;
     }
-
-
-
 
     public void HandleInput(InputHelper inputHelper)
     {
