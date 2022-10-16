@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
-using System.Transactions;
 using static System.Reflection.Metadata.BlobBuilder;
 
 class Blocks
@@ -12,7 +11,10 @@ class Blocks
     protected bool[,] blockArray = new bool[4,4];
     static Random random = new Random();
     Color color;
-    Vector2 blockPosition;
+    Vector2 blockPosition = new Vector2(0,0);
+    bool canMoveRight = true;
+    bool canMoveLeft = true;
+    const int blockArraySize = 4;
 
     Blocks currentBlock;
     public Blocks()
@@ -66,48 +68,57 @@ class Blocks
 
     public void HandleInput(InputHelper inputHelper)
     {
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Left))
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Left) && canMoveLeft)
         {
             blockPosition.X -= 1;
         }
 
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Right))
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Right) && canMoveRight)
         {
             blockPosition.X += 1;
         }
-
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Down))
-        {
-            blockPosition.Y += 1;
-        }
-
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.A))
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                for(int j = 0; j < 4; j++)
-                {
-                    currentBlock.layout[i, j] = currentBlock.layout[j, i];
-                }
-            }
-        }
     }
-
 
     public void Update()
     {
-        //blockPosition = new Vector2(0, 0);
+        for (int x = 0; x < blockArraySize; x++)
+        {
+            for (int y = 0; y < blockArraySize; y++)
+            {
+                if (currentBlock.layout[y, x] && blockPosition.X + x > 0 && blockPosition.X + x < 9)
+                {
+                    canMoveLeft = true;
+                    canMoveRight = true;
+                }
+                else if (currentBlock.layout[y, x])
+                {
+                    if(blockPosition.X + x == 0)
+                    {
+                        canMoveRight = true;
+                        canMoveLeft = false;
+                        goto loopEnd;
+                    }
+                    else if(blockPosition.X + x == 9)
+                    {
+                        canMoveLeft = true;
+                        canMoveRight = false;
+                        goto loopEnd;
+                    }
+                }
+            }
+        }
+        loopEnd:;
     }
 
     public void Draw(SpriteBatch spriteBatch, Texture2D texture)
     {
-        for(int i = 0; i < 4; i++)
+        for(int y = 0; y < blockArraySize; y++)
         {
-            for(int j = 0; j < 4; j++)
+            for(int x = 0; x < blockArraySize; x++)
             {
-                if (currentBlock.layout[i,j])
+                if (currentBlock.layout[y,x])
                 {
-                    spriteBatch.Draw(texture, new Vector2((float) (blockPosition.X + i) * cellWidth, (float) (blockPosition.Y + j) * cellWidth), Color.Red);
+                    spriteBatch.Draw(texture, new Vector2((float) (blockPosition.X + x) * cellWidth, (float) (blockPosition.Y + y) * cellWidth), Color.Red);
                 }
             }
         }

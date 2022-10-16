@@ -43,54 +43,12 @@ class TetrisGrid
     /// </summary>
 
 
-    //public void drawBlocks()
-    //{
-    //    if(l)
-    //    {
-    //        int x;
-    //        int y;
 
-    //        for (y = 0; y < 4; y++)
-    //        {
-    //            for (x = 0; x < 4; x++)
-    //            {
-    //                movementGrid[y, x] = blocks.blockList[0].layout(x, y);
-    //            }
-    //        }
-    //        l = false;
-    //    }
-       
-    //}
 
     public void Initialize()
     {
         blocks = new Blocks();
-        blocks.addBlocks("T");
-    }
-    public bool canMoveLeft()
-    {
-        bool move = true;
-        for(int i = 0; i < 20;i++)
-        {
-            if (movementGrid[i,0])
-            {
-                move = false;
-            }
-        }
-        return move;
-    }
-
-    public bool canMoveRight()
-    {
-        bool move = true;
-        for (int i = 0; i < 20; i++)
-        {
-            if (movementGrid[i, 9])
-            {
-                move = false;
-            }
-        }
-        return move;
+        blocks.addBlocks("I");
     }
 
     public void HandleInput(InputHelper inputHelper)
