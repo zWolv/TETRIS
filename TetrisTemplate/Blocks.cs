@@ -1,9 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
-using static System.Reflection.Metadata.BlobBuilder;
+
 
 class Blocks
 {
@@ -14,7 +12,9 @@ class Blocks
     Vector2 blockPosition = new Vector2(0,0);
     bool canMoveRight = true;
     bool canMoveLeft = true;
+    bool canMoveDown = true;
     const int blockArraySize = 4;
+    double previousTime = 0;
 
     Blocks currentBlock;
     public Blocks()
@@ -79,7 +79,20 @@ class Blocks
         }
     }
 
-    public void Update()
+    public void DropBlock(GameTime gameTime)
+    {
+        if(gameTime.TotalGameTime.TotalMilliseconds > previousTime + 1000 && blockPosition.Y + blockArraySize - 1 < 19)
+        {
+            previousTime = gameTime.TotalGameTime.TotalMilliseconds;
+            blockPosition.Y += 1;
+        } 
+    }
+
+    public void CanMoveDown()
+    {
+
+    }
+    public void CanMoveRightLeft()
     {
         for (int x = 0; x < blockArraySize; x++)
         {
@@ -110,6 +123,11 @@ class Blocks
         loopEnd:;
     }
 
+    public void Update(GameTime gameTime)
+    {
+        CanMoveRightLeft();
+        DropBlock(gameTime);
+    }
     public void Draw(SpriteBatch spriteBatch, Texture2D texture)
     {
         for(int y = 0; y < blockArraySize; y++)

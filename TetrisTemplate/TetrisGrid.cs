@@ -58,8 +58,7 @@ class TetrisGrid
 
     public void Update(GameTime gameTime)
     {
-        //drawBlocks();
-        blocks.Update();
+        blocks.Update(gameTime);
     }
 
     /// <summary>
