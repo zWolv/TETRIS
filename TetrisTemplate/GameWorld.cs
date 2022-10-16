@@ -59,7 +59,7 @@ class GameWorld
     }
     public void Update(GameTime gameTime)
     {
-        grid.Update(gameTime);
+        grid.Update(gameTime, grid);
     }
 
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)

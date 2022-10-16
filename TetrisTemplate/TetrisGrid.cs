@@ -9,7 +9,8 @@ using System.Collections.Generic;
 /// </summary>
 class TetrisGrid
 {
-    protected bool[,] movementGrid = new bool[20, 10];
+    public bool[,] collisionGrid = new bool[20, 10];
+    public Color[,] colorGrid = new Color[20, 10];
 
     /// The sprite of a single empty cell in the grid.
     Texture2D emptyCell;
@@ -35,9 +36,6 @@ class TetrisGrid
         Clear();
     }
 
-    
-    Color[,] colorGrid = new Color[20, 10];
-
     /// <summary>
     /// Updates the grid with new blocks
     /// </summary>
@@ -56,9 +54,9 @@ class TetrisGrid
         blocks.HandleInput(inputHelper);
     }
 
-    public void Update(GameTime gameTime)
+    public void Update(GameTime gameTime, TetrisGrid grid)
     {
-        blocks.Update(gameTime);
+        blocks.Update(gameTime, grid);
     }
 
     /// <summary>
@@ -74,14 +72,13 @@ class TetrisGrid
         {
             for (int t = 0; t < Width; t++)
             {
-
-                if (movementGrid[i, t])
-                {
-                    spriteBatch.Draw(emptyCell, new Vector2((float)t * 30, (float)i * 30), Color.Red);
-                }
-                else
+                if (!collisionGrid[i, t])
                 {
                     spriteBatch.Draw(emptyCell, new Vector2((float)t * 30, (float)i * 30), Color.White);
+                }
+                else if(collisionGrid[i, t])
+                {
+                    spriteBatch.Draw(emptyCell, new Vector2((float)t * 30, (float)i * 30), Color.Black);
                 }
             }
         }

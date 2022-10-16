@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-
+using System.ComponentModel;
 
 class Blocks
 {
@@ -81,16 +81,51 @@ class Blocks
 
     public void DropBlock(GameTime gameTime)
     {
-        if(gameTime.TotalGameTime.TotalMilliseconds > previousTime + 1000 && blockPosition.Y + blockArraySize - 1 < 19)
+        if(gameTime.TotalGameTime.TotalMilliseconds > previousTime + 1000 && canMoveDown)
         {
             previousTime = gameTime.TotalGameTime.TotalMilliseconds;
             blockPosition.Y += 1;
         } 
     }
 
-    public void CanMoveDown()
+    // WORK IN PROGRESS
+    public void PushBlock(TetrisGrid grid)
     {
+        if (blockPosition.Y + blockArraySize - 1 == 19)
+        {
+            for (int y = 0; y < blockArraySize; y++)
+            {
+                for (int x = 0; x < blockArraySize; x++)
+                {
+                    if (currentBlock.layout[y, x])
+                    {
+                        grid.collisionGrid[(int)blockPosition.Y + y, (int)blockPosition.X + x] = true;
+                    } 
+                }
+            }
+        }
+    }
 
+    //WORK IN PROGRESS
+    public void CanMoveDown(TetrisGrid grid)
+    {
+        if (blockPosition.Y + blockArraySize - 1 < 19)
+        {
+            for (int y = 0; y < grid.Height; y++)
+            {
+                for (int x = 0; x < grid.Width; x++)
+                {
+                }
+            }
+        }
+        else if(blockPosition.Y + blockArraySize - 1 == 19)
+        {
+            canMoveDown = false;
+        }
+        else
+        {
+            canMoveDown = true;
+        }
     }
     public void CanMoveRightLeft()
     {
@@ -123,10 +158,13 @@ class Blocks
         loopEnd:;
     }
 
-    public void Update(GameTime gameTime)
+    public void Update(GameTime gameTime, TetrisGrid grid)
     {
         CanMoveRightLeft();
+        CanMoveDown(grid);
         DropBlock(gameTime);
+        PushBlock(grid);
+
     }
     public void Draw(SpriteBatch spriteBatch, Texture2D texture)
     {
