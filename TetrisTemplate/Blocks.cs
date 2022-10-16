@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using System.Transactions;
 using static System.Reflection.Metadata.BlobBuilder;
 
 class Blocks
@@ -74,16 +75,30 @@ class Blocks
         {
             blockPosition.X += 1;
         }
+
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Down))
+        {
+            blockPosition.Y += 1;
+        }
+
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.A))
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                for(int j = 0; j < 4; j++)
+                {
+                    currentBlock.layout[i, j] = currentBlock.layout[j, i];
+                }
+            }
+        }
     }
 
 
     public void Update()
     {
-        blockPosition = new Vector2(0, 0);
-
-
-        
+        //blockPosition = new Vector2(0, 0);
     }
+
     public void Draw(SpriteBatch spriteBatch, Texture2D texture)
     {
         for(int i = 0; i < 4; i++)
