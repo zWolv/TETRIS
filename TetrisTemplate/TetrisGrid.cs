@@ -78,7 +78,7 @@ class TetrisGrid
                 }
                 else if(collisionGrid[i, t])
                 {
-                    spriteBatch.Draw(emptyCell, new Vector2((float)t * 30, (float)i * 30), Color.Black);
+                    spriteBatch.Draw(emptyCell, new Vector2((float)t * 30, (float)i * 30), blocks.blockColor);
                 }
             }
         }

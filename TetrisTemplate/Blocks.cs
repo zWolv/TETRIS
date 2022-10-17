@@ -6,10 +6,9 @@ using System.ComponentModel;
 class Blocks
 {
     const int cellWidth = 30;
-    protected bool[,] blockArray = new bool[4,4];
+    protected bool[,] blockArray = new bool[4, 4];
     static Random random = new Random();
-    Color color;
-    Vector2 blockPosition = new Vector2(0,0);
+    Vector2 blockPosition = new Vector2(0, 0);
     bool canMoveRight = true;
     bool canMoveLeft = true;
     bool canMoveDown = true;
@@ -21,15 +20,22 @@ class Blocks
     {
 
     }
-     
+
     public virtual bool[,] layout
     {
         get
         {
-            return new bool[4,4];
+            return new bool[4, 4];
         }
     }
 
+    public virtual Color blockColor
+    {
+        get
+        {
+            return Color.White;
+        }
+    }
     public void addBlocks(string blockType)
     {
 
@@ -91,7 +97,7 @@ class Blocks
     // WORK IN PROGRESS
     public void PushBlock(TetrisGrid grid)
     {
-        if (blockPosition.Y + blockArraySize - 1 == 19)
+        if (!canMoveDown)
         {
             for (int y = 0; y < blockArraySize; y++)
             {
@@ -100,7 +106,7 @@ class Blocks
                     if (currentBlock.layout[y, x])
                     {
                         grid.collisionGrid[(int)blockPosition.Y + y, (int)blockPosition.X + x] = true;
-                    } 
+                    }
                 }
             }
         }
@@ -127,6 +133,7 @@ class Blocks
             canMoveDown = true;
         }
     }
+
     public void CanMoveRightLeft()
     {
         for (int x = 0; x < blockArraySize; x++)
@@ -197,7 +204,14 @@ class L : Blocks
     public L()
     {
     }
-    //color = new Color.Orange
+
+    public override Color blockColor
+    {
+        get
+        {
+            return Color.Orange;
+        }
+    }
 
     public override bool[,] layout
     {
@@ -222,7 +236,14 @@ class J : Blocks
     {
 
     }
-    //color = new Color.DarkBlue;
+
+    public override Color blockColor
+    {
+        get
+        {
+            return Color.DarkBlue;
+        }
+    }
     public override bool[,] layout
     {
         get
@@ -247,7 +268,13 @@ class O : Blocks
     {
 
     }
-    // color = new Color.Yellow;
+    public override Color blockColor
+    {
+        get
+        {
+            return Color.Yellow;
+        }
+    }
 
 
 
@@ -275,7 +302,13 @@ class I : Blocks
     {
 
     }
-    // color = new Color.LightBlue;
+    public override Color blockColor
+    {
+        get
+        {
+            return Color.LightBlue;
+        }
+    }
 
     public override bool[,] layout
     {
@@ -301,7 +334,13 @@ class S : Blocks
     {
 
     }
-    //color = new Color.LightGreen;
+    public override Color blockColor
+    {
+        get
+        {
+            return Color.LightGreen;
+        }
+    }
 
     public override bool[,] layout
     {
@@ -326,7 +365,13 @@ class Z : Blocks
     {
 
     }
-    // color = new Color.Red;
+    public override Color blockColor
+    {
+        get
+        {
+            return Color.Red;
+        }
+    }
 
     public override bool[,] layout
     {
@@ -351,7 +396,13 @@ class T : Blocks
     {
 
     }
-    // color = new Color.Purple;
+    public override Color blockColor
+    {
+        get
+        {
+            return Color.Purple;
+        }
+    }
 
     public override bool[,] layout
     {
@@ -375,6 +426,14 @@ class U : Blocks
     public U()
     {
 
+    }
+
+    public override Color blockColor
+    {
+        get
+        {
+            return Color.Pink;
+        }
     }
 
     public override bool[,] layout
