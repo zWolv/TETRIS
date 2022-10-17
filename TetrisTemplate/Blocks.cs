@@ -15,6 +15,7 @@ class Blocks
     const int blockArraySize = 4;
     double previousTime = 0;
     bool blockPushed = true;
+    const int timeToDrop = 1000;
 
     Blocks currentBlock;
     public Blocks()
@@ -106,7 +107,7 @@ class Blocks
     public void DropBlock(GameTime gameTime, TetrisGrid grid)
     {
         CanMoveDown(grid);
-        if(gameTime.TotalGameTime.TotalMilliseconds > previousTime + 1000 && canMoveDown)
+        if(gameTime.TotalGameTime.TotalMilliseconds > previousTime + timeToDrop && canMoveDown)
         {
             previousTime = gameTime.TotalGameTime.TotalMilliseconds;
             blockPosition.Y += 1;
@@ -130,34 +131,36 @@ class Blocks
                 }
             }
             blockPushed = true;
+            ResetPosition();
         }
+    }
+
+    public void ResetPosition()
+    {
+        blockPosition = new Vector2(0, 4);
     }
 
     //WORK IN PROGRESS
     public void CanMoveDown(TetrisGrid grid)
     {
-        if (blockPosition.Y + blockArraySize - 1 < 19)
+
+        for (int blockY = 0; blockY < blockArraySize; blockY++)
         {
-            for (int blockY = 0; blockY < blockArraySize; blockY++)
+            for (int blockX = 0; blockX < blockArraySize; blockX++)
             {
-                if (!canMoveDown)
+                int nextBlock = (int)blockPosition.Y + blockY + 1;
+                if ((currentBlock.layout[blockY, blockX] && nextBlock <= 19 && grid.collisionGrid[nextBlock, blockX + (int)blockPosition.X]) || (currentBlock.layout[blockY, blockX] && blockPosition.Y + blockY >= grid.Height - 1))
                 {
-                    break;
+                    canMoveDown = false;
+                    goto loopEnd;
                 }
-                for (int blockX = 0; blockX < blockArraySize; blockX++)
+                else
                 {
-                    if ((currentBlock.layout[blockY, blockX] && grid.collisionGrid[blockY + (int)blockPosition.Y + 1, blockX + (int)blockPosition.X]) || (currentBlock.layout[blockY, blockX] && blockPosition.Y + blockY == grid.Height - 1))
-                    {
-                        canMoveDown = false;
-                        break;
-                    }
+                    canMoveDown = true;
                 }
             }
         }
-        else
-        {
-            canMoveDown = true;
-        }
+        loopEnd:;
     }
 
     public void CanMoveRightLeft()
@@ -206,7 +209,7 @@ class Blocks
             {
                 if (currentBlock.layout[y,x])
                 {
-                    spriteBatch.Draw(texture, new Vector2((float) (blockPosition.X + x) * cellWidth, (float) (blockPosition.Y + y) * cellWidth), Color.Red);
+                    spriteBatch.Draw(texture, new Vector2((float) (blockPosition.X + x) * cellWidth, (float) (blockPosition.Y + y) * cellWidth), currentBlock.blockColor);
                 }
             }
         }
