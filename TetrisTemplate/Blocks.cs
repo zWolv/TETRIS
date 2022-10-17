@@ -45,6 +45,14 @@ class Blocks
             return Color.White;
         }
     }
+
+    public Blocks thisBlock
+    {
+        get
+        {
+            return currentBlock;
+        }
+    }
     public void addBlocks(int blockType)
     {
         if(blockPushed)
