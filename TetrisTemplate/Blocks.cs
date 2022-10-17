@@ -14,6 +14,7 @@ class Blocks
     bool canMoveDown = true;
     const int blockArraySize = 4;
     double previousTime = 0;
+    bool blockPushed = true;
 
     Blocks currentBlock;
     public Blocks()
@@ -21,6 +22,13 @@ class Blocks
 
     }
 
+    public Random Random
+    {
+        get
+        {
+            return random;
+        }
+    }
     public virtual bool[,] layout
     {
         get
@@ -36,37 +44,47 @@ class Blocks
             return Color.White;
         }
     }
-    public void addBlocks(string blockType)
+    public void addBlocks(int blockType)
     {
-
-        switch (blockType)
+        if(blockPushed)
         {
-            case ("L"):
-                currentBlock = new L();
-                break;
-            case ("J"):
-                currentBlock = new J();
-                break;
-            case ("O"):
-                currentBlock = new O();
-                break;
-            case ("T"):
-                currentBlock = new T();
-                break;
-            case ("S"):
-                currentBlock = new S();
-                break;
-            case ("Z"):
-                currentBlock = new Z();
-                break;
-            case ("I"):
-                currentBlock = new I();
-                break;
-            case ("U"):
-                currentBlock = new U();
-                break;
-            default:
-                break;
+            switch (blockType)
+            {
+                case (0):
+                    currentBlock = new L();
+                    blockPushed = false;
+                    break;
+                case (1):
+                    currentBlock = new J();
+                    blockPushed = false;
+                    break;
+                case (2):
+                    currentBlock = new O();
+                    blockPushed = false;
+                    break;
+                case (3):
+                    currentBlock = new T();
+                    blockPushed = false;
+                    break;
+                case (4):
+                    currentBlock = new S();
+                    blockPushed = false;
+                    break;
+                case (5):
+                    currentBlock = new Z();
+                    blockPushed = false;
+                    break;
+                case (6):
+                    currentBlock = new I();
+                    blockPushed = false;
+                    break;
+                case (7):
+                    currentBlock = new U();
+                    blockPushed = false;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -85,8 +103,9 @@ class Blocks
         }
     }
 
-    public void DropBlock(GameTime gameTime)
+    public void DropBlock(GameTime gameTime, TetrisGrid grid)
     {
+        CanMoveDown(grid);
         if(gameTime.TotalGameTime.TotalMilliseconds > previousTime + 1000 && canMoveDown)
         {
             previousTime = gameTime.TotalGameTime.TotalMilliseconds;
@@ -97,6 +116,7 @@ class Blocks
     // WORK IN PROGRESS
     public void PushBlock(TetrisGrid grid)
     {
+        CanMoveDown(grid);
         if (!canMoveDown)
         {
             for (int y = 0; y < blockArraySize; y++)
@@ -109,6 +129,7 @@ class Blocks
                     }
                 }
             }
+            blockPushed = true;
         }
     }
 
@@ -117,16 +138,21 @@ class Blocks
     {
         if (blockPosition.Y + blockArraySize - 1 < 19)
         {
-            for (int y = 0; y < grid.Height; y++)
+            for (int blockY = 0; blockY < blockArraySize; blockY++)
             {
-                for (int x = 0; x < grid.Width; x++)
+                if (!canMoveDown)
                 {
+                    break;
+                }
+                for (int blockX = 0; blockX < blockArraySize; blockX++)
+                {
+                    if ((currentBlock.layout[blockY, blockX] && grid.collisionGrid[blockY + (int)blockPosition.Y + 1, blockX + (int)blockPosition.X]) || (currentBlock.layout[blockY, blockX] && blockPosition.Y + blockY == grid.Height - 1))
+                    {
+                        canMoveDown = false;
+                        break;
+                    }
                 }
             }
-        }
-        else if(blockPosition.Y + blockArraySize - 1 == 19)
-        {
-            canMoveDown = false;
         }
         else
         {
@@ -168,8 +194,7 @@ class Blocks
     public void Update(GameTime gameTime, TetrisGrid grid)
     {
         CanMoveRightLeft();
-        CanMoveDown(grid);
-        DropBlock(gameTime);
+        DropBlock(gameTime, grid);
         PushBlock(grid);
 
     }
