@@ -13,7 +13,6 @@ class TetrisGame : Game
     /// A static reference to the ContentManager object, used for loading assets.
     /// </summary>
     public static ContentManager ContentManager { get; private set; }
-    
 
     /// <summary>
     /// A static reference to the width and height of the screen.
@@ -46,9 +45,6 @@ class TetrisGame : Game
         // create the input helper object
         inputHelper = new InputHelper();
     }
-
-
-   
 
     protected override void LoadContent()
     {
