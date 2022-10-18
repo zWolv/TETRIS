@@ -113,28 +113,22 @@ class Blocks
 
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.A))
         {
-            bool[,] tempLayout = currentBlock.layout;
-            int x = 0;
-            int y = 0;
-            int i = x;
-            int j = y;
+            bool[,] tempLayout = new bool[blockArraySize, blockArraySize];
 
-            for (x = 0; x < 4; x++)
+            for(int i = 0; i < blockArraySize; i++)
             {
-                if (i < 3)
+                for(int j = 0; j < blockArraySize; j++)
                 {
-                    i++;
+                    tempLayout[i, j] = currentBlock.layout[i, j];
                 }
+            }
 
-                for (y = 0; y < 4; y++)
+            for (int x = 0; x < 4; x++)
+            {
+                for (int y = 0; y < 4; y++)
                 {
-                    if (j < 3)
-                    {
-                        j++;
-                    };
-
-                    currentBlock.layout[x, y] = tempLayout[j, i];
-                    //currentBlock.layout[x, y] = currentBlock.layout[3 - x, y];
+                    currentBlock.layout[x, y] = tempLayout[y, 3 - x];
+                    //currentBlock.layout[x, y] = currentBlock.layout[x, y];
                 }
             }
         }
