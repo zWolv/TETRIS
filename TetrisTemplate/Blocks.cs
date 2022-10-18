@@ -15,6 +15,7 @@ class Blocks
     bool canMoveDown = true;
     bool previousCanMoveDown = true;
     bool blockPushed = true;
+    bool blockManualPush = false;
 
     double previousTimeDrop = 0;
     double previousTimePush = 0;
@@ -120,6 +121,12 @@ class Blocks
             blockPosition.X += 1;
         }
 
+
+        // 2e condition moet nog
+        if(inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Space))
+        {
+        }
+
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Down))
         {
             blockPosition.Y += 1;
@@ -190,8 +197,9 @@ class Blocks
     public void PushBlock(TetrisGrid grid, GameTime gameTime)
     {
         GetCurrentPushTime(gameTime);
-        if (!canMoveDown && gameTime.TotalGameTime.TotalMilliseconds > previousTimePush + timeToPush)
+        if ((!canMoveDown && gameTime.TotalGameTime.TotalMilliseconds > previousTimePush + timeToPush) || blockManualPush)
         {
+            blockManualPush = false;
             for (int y = 0; y < blockArraySize; y++)
             {
                 for (int x = 0; x < blockArraySize; x++)
@@ -251,6 +259,8 @@ class Blocks
 
     public void CanMoveRightLeft(TetrisGrid grid)
     {
+        canMoveLeft = true;
+        canMoveRight = true;
         for (int x = 0; x < blockArraySize; x++)
         {
             int blockRight = (int)blockPosition.X + x + 1;
@@ -258,26 +268,32 @@ class Blocks
             for (int y = 0; y < blockArraySize; y++)
             {
 
-                if (currentBlock.layout[y, x] && blockPosition.X + x > 0 && blockPosition.X + x < 9)
+                if (!currentBlock.layout[y, x])
                 {
-                    canMoveLeft = true;
-                    canMoveRight = true;
+                    continue;
                 }
-                else if ((currentBlock.layout[y, x] && blockPosition.X + x <= 0) || (currentBlock.layout[y, x] && blockLeft >= 0 && grid.collisionGrid[y + (int)blockPosition.Y, blockLeft]))
+
+                if (!(blockPosition.X + x > 0 ))
                 {
-                    canMoveRight = true;
                     canMoveLeft = false;
-                    goto loopEnd;
                 }
-                else if ((currentBlock.layout[y, x] && blockPosition.X + x >= 9) || (currentBlock.layout[y, x] && blockRight <= 9 && grid.collisionGrid[y + (int)blockPosition.Y, blockRight]))
+
+                if(!(blockPosition.X + x < 9))
                 {
-                    canMoveLeft = true;
                     canMoveRight = false;
-                    goto loopEnd;
+                }
+
+                if(canMoveLeft && grid.collisionGrid[y + (int)blockPosition.Y, blockLeft])
+                {
+                    canMoveLeft = false;
+                }
+
+                if (canMoveRight && grid.collisionGrid[y + (int)blockPosition.Y, blockRight])
+                {
+                    canMoveRight = false;
                 }
             }
         }
-        loopEnd:;
     }
 
     public void Update(GameTime gameTime, TetrisGrid grid)
