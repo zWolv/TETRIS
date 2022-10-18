@@ -47,6 +47,7 @@ class TetrisGrid
     /// <param name="b"></param>
     public TetrisGrid()
     {
+        blockMaster = new Blocks();
         emptyCell = TetrisGame.ContentManager.Load<Texture2D>("block");
         position = Vector2.Zero;
         Clear();
@@ -259,10 +260,6 @@ class TetrisGrid
     /// <summary>
     /// Updates the grid with new blocks
     /// </summary>
-    public void LoadContent()
-    {
-        blockMaster = new Blocks();
-    }
 
     public void AddMovingBlock()
     {

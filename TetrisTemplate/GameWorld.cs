@@ -48,11 +48,6 @@ class GameWorld
         grid = new TetrisGrid();
     }
 
-    public void LoadContent()
-    {
-        grid.LoadContent();
-    }
-
     public void HandleInput(GameTime gameTime, InputHelper inputHelper)
     {
         grid.HandleInput(inputHelper);
