@@ -27,7 +27,7 @@ class TetrisGrid
     /// The number of grid elements in the y-direction.
     public int Height { get { return 20; } }
 
-    Blocks blocks;
+    Blocks block;
     /// <summary>
     /// Creates a new TetrisGrid.
     /// </summary>
@@ -44,17 +44,17 @@ class TetrisGrid
     /// </summary>
     public void LoadContent()
     {
-        blocks = new Blocks();
+        block = new Blocks();
     }
     public void HandleInput(InputHelper inputHelper)
     {
-        blocks.HandleInput(inputHelper);
+        block.HandleInput(inputHelper);
     }
 
     public void Update(GameTime gameTime, TetrisGrid grid)
     {
-        blocks.addBlocks(blocks.Random.Next(0, blockVariations - 1));
-        blocks.Update(gameTime, grid);
+        block.addBlocks(block.Random.Next(0, blockVariations - 1));
+        block.Update(gameTime, grid);
     }
 
     /// <summary>
@@ -80,7 +80,7 @@ class TetrisGrid
                 }
             }
         }
-        blocks.Draw(spriteBatch, emptyCell);
+        block.Draw(spriteBatch, emptyCell);
     }
 
     /// <summary>

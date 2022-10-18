@@ -127,48 +127,56 @@ class Blocks
 
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.A))
         {
-            bool[,] tempLayout = new bool[blockArraySize, blockArraySize];
-
-            for(int i = 0; i < blockArraySize; i++)
-            {
-                for(int j = 0; j < blockArraySize; j++)
-                {
-                    tempLayout[i, j] = currentBlock.layout[i, j];
-                }
-            }
-
-            for (int x = 0; x < 4; x++)
-            {
-                for (int y = 0; y < 4; y++)
-                {
-                    currentBlock.layout[x, y] = tempLayout[y, 3 - x];
-                    //currentBlock.layout[x, y] = currentBlock.layout[x, y];
-                }
-            }
+            RotateLeft();
         }
 
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.D))
         {
-            bool[,] tempLayout = new bool[blockArraySize, blockArraySize];
+            RotateRight();
+        }
+    }
 
-            for (int i = 0; i < blockArraySize; i++)
+    public void RotateRight()
+    {
+        bool[,] tempLayout = new bool[blockArraySize, blockArraySize];
+
+        for (int i = 0; i < blockArraySize; i++)
+        {
+            for (int j = 0; j < blockArraySize; j++)
             {
-                for (int j = 0; j < blockArraySize; j++)
-                {
-                    tempLayout[i, j] = currentBlock.layout[i, j];
-                }
+                tempLayout[i, j] = currentBlock.layout[i, j];
             }
+        }
 
-            for (int x = 0; x < 4; x++)
+        for (int x = 0; x < 4; x++)
+        {
+            for (int y = 0; y < 4; y++)
             {
-                for (int y = 0; y < 4; y++)
-                {
-                    currentBlock.layout[x, y] = tempLayout[3 - y, x];
-                }
+                currentBlock.layout[x, y] = tempLayout[3 - y, x];
             }
         }
     }
 
+    public void RotateLeft()
+    {
+        bool[,] tempLayout = new bool[blockArraySize, blockArraySize];
+
+        for (int i = 0; i < blockArraySize; i++)
+        {
+            for (int j = 0; j < blockArraySize; j++)
+            {
+                tempLayout[i, j] = currentBlock.layout[i, j];
+            }
+        }
+
+        for (int x = 0; x < 4; x++)
+        {
+            for (int y = 0; y < 4; y++)
+            {
+                currentBlock.layout[x, y] = tempLayout[y, 3 - x];
+            }
+        }
+    }
     public void DropBlock(GameTime gameTime, TetrisGrid grid)
     {
         if(gameTime.TotalGameTime.TotalMilliseconds > previousTimeDrop + timeToDrop && canMoveDown)
@@ -431,9 +439,9 @@ class S : Blocks
 
     bool[,] layoutS = new bool[,]
     {
-            {false, false, true, true},
+            {false, true, false, false },
             {false, true, true, false},
-            {false, false, false, false},
+            {false, false, true, false},
             {false, false, false, false}
     };
 
