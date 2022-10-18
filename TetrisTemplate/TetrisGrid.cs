@@ -93,7 +93,7 @@ class TetrisGrid
     public bool CanMoveDown()
     {
         bool canMoveDown = true;
-        for (int y = 0; y < movingBlock.layout.GetLength(yLength); y++)
+        for (int y = 0; y < movingBlock.layout.GetLength(yLength) && canMoveDown; y++)
         {
             int nextBlock = y + blockY + 1;
             for (int x = 0; x < movingBlock.layout.GetLength(xLength); x++)
@@ -106,17 +106,15 @@ class TetrisGrid
                 if(blockY + y >= Height - 1)
                 {
                     canMoveDown = false;
-                    goto loopEnd;
+                    break;
                 }
 
                 if (nextBlock < Height && collisionGrid[nextBlock, x + blockX])
                 {
                     canMoveDown = false;
-                    goto loopEnd;
                 }
             }
         }
-        loopEnd:;
         return canMoveDown;
     }
 
@@ -204,7 +202,7 @@ class TetrisGrid
     public bool CanMoveRight()
     {
         bool canMoveRight = true;
-        for (int x = 0; x < movingBlock.layout.GetLength(xLength); x++)
+        for (int x = 0; x < movingBlock.layout.GetLength(xLength) && canMoveRight; x++)
         {
             int blockRight = blockX + x + 1;
             for (int y = 0; y < movingBlock.layout.GetLength(yLength); y++)
@@ -218,24 +216,22 @@ class TetrisGrid
                 if (!(blockX + x < Width - 1))
                 {
                     canMoveRight = false;
-                    goto loopEnd;
+                    break;
                 }
 
                 if (canMoveRight && collisionGrid[y + blockY, blockRight])
                 {
                     canMoveRight = false;
-                    goto loopEnd;
                 }
             }
         }
-    loopEnd:;
         return canMoveRight;
     }
 
     public bool CanMoveLeft()
     {
         bool canMoveLeft = true;
-        for (int x = 0; x < movingBlock.layout.GetLength(xLength); x++)
+        for (int x = 0; x < movingBlock.layout.GetLength(xLength) && canMoveLeft; x++)
         {
             int blockLeft = blockX + x - 1;
             for (int y = 0; y < movingBlock.layout.GetLength(yLength); y++)
@@ -249,17 +245,15 @@ class TetrisGrid
                 if (!(blockX + x > 0))
                 {
                     canMoveLeft = false;
-                    goto loopEnd;
+                    break;
                 }
 
                 if (canMoveLeft && collisionGrid[y + blockY, blockLeft])
                 {
                     canMoveLeft = false;
-                    goto loopEnd;
                 }
             }
         }
-        loopEnd:;
         return canMoveLeft;
     }
 
@@ -293,7 +287,7 @@ class TetrisGrid
     {
         AddMovingBlock();
         GetBlockPosition();
-        movingBlock.DropBlock(gameTime);
+        DropBlock(gameTime);
         PushBlock(gameTime);
 
         
