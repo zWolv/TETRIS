@@ -77,6 +77,33 @@ class Blocks
         {
             blockPosition.X += 1;
         }
+
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.A))
+        {
+            bool[,] tempLayout = currentBlock.layout;
+            int x = 0;
+            int y = 0;
+            int i = x;
+            int j = y;
+
+            for (x = 0; x < 4; x++)
+            {
+                if (i < 3)
+                {
+                    i++;
+                }
+
+                for (y = 0; y < 4; y++)
+                {
+                    if (j < 3)
+                    {
+                        j++;
+                    };
+
+                    currentBlock.layout[x, y] = tempLayout[j, i];
+                }
+            }
+        }
     }
 
     public void DropBlock(GameTime gameTime)
