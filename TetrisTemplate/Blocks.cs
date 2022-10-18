@@ -134,6 +134,7 @@ class Blocks
                     };
 
                     currentBlock.layout[x, y] = tempLayout[j, i];
+                    //currentBlock.layout[x, y] = currentBlock.layout[3 - x, y];
                 }
             }
         }
