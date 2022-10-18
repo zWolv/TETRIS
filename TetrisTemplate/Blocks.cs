@@ -7,17 +7,10 @@ class Blocks
 {
     Random random = new Random();
 
-    Vector2 blockPosition = new Vector2(0, 4);
-
-    bool canMoveDown;
-    bool canMoveRight;
-    bool canMoveLeft;
+    Vector2 blockPosition = new Vector2(4, 0);
 
     const int blockArraySize = 4;
     const int cellWidth = 30;
-    const int timeBetweenDrop = 1000;
-
-    double previousDropTime = 0;
 
     public Blocks()
     {
@@ -37,6 +30,10 @@ class Blocks
         {
             return new bool[4, 4];
         }
+        protected set
+        {
+            
+        }
     }
 
     public virtual Color blockColor
@@ -55,46 +52,19 @@ class Blocks
         }
     }
 
-    public void GiveMovementPossibilities(bool down, bool left, bool right)
+    public void MoveDown()
     {
-        canMoveDown = down;
-        canMoveLeft = left;
-        canMoveRight = right;
+        blockPosition.Y += 1;
     }
 
-    public void HandleInput(InputHelper inputHelper)
+    public void MoveLeft()
     {
+        blockPosition.X -= 1;
+    }
 
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Left) && canMoveLeft)
-        {
-            blockPosition.X -= 1;
-        }
-
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Right) && canMoveRight)
-        {
-            blockPosition.X += 1;
-        }
-
-
-        // 2e condition moet nog
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Space))
-        {
-        }
-
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Down) && canMoveDown)
-        {
-            blockPosition.Y += 1;
-        }
-
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.A))
-        {
-            RotateLeft();
-        }
-
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.D))
-        {
-            RotateRight();
-        }
+    public void MoveRight()
+    {
+        blockPosition.X += 1;
     }
 
     public void ResetPosition()
@@ -127,55 +97,36 @@ class Blocks
         }
     }
 
-    public void DropBlock(GameTime gameTime)
-    {
-        if (gameTime.TotalGameTime.TotalMilliseconds > previousDropTime + timeBetweenDrop && canMoveDown)
-        {
-            previousDropTime = gameTime.TotalGameTime.TotalMilliseconds;
-            blockPosition.Y += 1;
-        }
-    }
+    
 
     public void RotateRight()
     {
         bool[,] tempLayout = new bool[blockArraySize, blockArraySize];
 
-        for (int i = 0; i < blockArraySize; i++)
-        {
-            for (int j = 0; j < blockArraySize; j++)
-            {
-                tempLayout[i, j] = this.layout[i, j];
-            }
-        }
 
         for (int x = 0; x < 4; x++)
         {
             for (int y = 0; y < 4; y++)
             {
-                this.layout[x, y] = tempLayout[3 - y, x];
+                tempLayout[x, y] = this.layout[3 - y, x];
             }
         }
+        this.layout = tempLayout;
     }
 
     public void RotateLeft()
     {
         bool[,] tempLayout = new bool[blockArraySize, blockArraySize];
 
-        for (int i = 0; i < blockArraySize; i++)
-        {
-            for (int j = 0; j < blockArraySize; j++)
-            {
-                tempLayout[i, j] = this.layout[i, j];
-            }
-        }
-
         for (int x = 0; x < 4; x++)
         {
             for (int y = 0; y < 4; y++)
             {
-                this.layout[x, y] = tempLayout[y, 3 - x];
+                tempLayout[x, y] = this.layout[y, 3 - x];
             }
         }
+
+        this.layout = tempLayout;
     }
 
     public void Draw(SpriteBatch spriteBatch, Texture2D texture)
@@ -223,6 +174,10 @@ class L : Blocks
         {
             return layoutL;
         }
+        protected set
+        {
+            layoutL = value;
+        }
     }
 }
 
@@ -254,7 +209,13 @@ class J : Blocks
         {
             return layoutJ;
         }
+        protected set
+        {
+            layoutJ = value;
+        }
     }
+
+   
 }
 
 
@@ -288,6 +249,10 @@ class O : Blocks
         {
             return layoutO;
         }
+        protected set
+        {
+            layoutO = value;
+        }
     }
 }
 
@@ -319,6 +284,10 @@ class I : Blocks
         get
         {
             return layoutI;
+        }
+        protected set
+        {
+            layoutI = value;
         }
     }
 }
@@ -352,6 +321,10 @@ class S : Blocks
         {
             return layoutS;
         }
+        protected set
+        {
+            layoutS = value;
+        }
     }
 }
 
@@ -382,6 +355,10 @@ class Z : Blocks
         get
         {
             return layoutZ;
+        }
+        protected set
+        {
+            layoutZ = value;
         }
     }
 }
@@ -414,6 +391,10 @@ class T : Blocks
         {
             return layoutT;
         }
+        protected set
+        {
+            layoutT = value;
+        }
     }
 }
 
@@ -445,6 +426,10 @@ class U : Blocks
         get
         {
             return layoutU;
+        }
+        protected set
+        {
+            layoutU = value;
         }
     }
 }
