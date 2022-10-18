@@ -9,10 +9,16 @@ class Blocks
 
     Vector2 blockPosition = new Vector2(0, 4);
 
+    bool canMoveDown;
+    bool canMoveRight;
+    bool canMoveLeft;
+
     const int blockArraySize = 4;
     const int cellWidth = 30;
+    const int timeBetweenDrop = 1000;
 
-    Blocks currentBlock;
+    double previousDropTime = 0;
+
     public Blocks()
     {
 
@@ -41,61 +47,44 @@ class Blocks
         }
     }
 
-    public Blocks block
+    public Vector2 getBlockPosition
     {
         get
         {
-            return currentBlock;
+            return blockPosition;
         }
     }
-    public void addBlocks(int blockType, bool blockPushed)
+
+    public void GiveMovementPossibilities(bool down, bool left, bool right)
     {
-        if(blockPushed)
-        {
-            switch (blockType)
-            {
-                case (0):
-                    currentBlock = new L();
-                    blockPushed = false;
-                    break;
-                case (1):
-                    currentBlock = new J();
-                    blockPushed = false;
-                    break;
-                case (2):
-                    currentBlock = new O();
-                    blockPushed = false;
-                    break;
-                case (3):
-                    currentBlock = new T();
-                    blockPushed = false;
-                    break;
-                case (4):
-                    currentBlock = new S();
-                    blockPushed = false;
-                    break;
-                case (5):
-                    currentBlock = new Z();
-                    blockPushed = false;
-                    break;
-                case (6):
-                    currentBlock = new I();
-                    blockPushed = false;
-                    break;
-                case (7):
-                    currentBlock = new U();
-                    blockPushed = false;
-                    break;
-                default:
-                    break;
-            }
-        }
+        canMoveDown = down;
+        canMoveLeft = left;
+        canMoveRight = right;
     }
-
-
 
     public void HandleInput(InputHelper inputHelper)
     {
+
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Left) && canMoveLeft)
+        {
+            blockPosition.X -= 1;
+        }
+
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Right) && canMoveRight)
+        {
+            blockPosition.X += 1;
+        }
+
+
+        // 2e condition moet nog
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Space))
+        {
+        }
+
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Down) && canMoveDown)
+        {
+            blockPosition.Y += 1;
+        }
 
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.A))
         {
@@ -108,6 +97,45 @@ class Blocks
         }
     }
 
+    public void ResetPosition()
+    {
+        blockPosition = new Vector2(4, 0);
+    }
+
+    public Blocks AddBlocks(int blockType)
+    {
+        switch (blockType)
+        {
+            case (0):
+                return new L();
+            case (1):
+                return new J();
+            case (2):
+                return new O();
+            case (3):
+                return new T();
+            case (4):
+                return new S();
+            case (5):
+                return new Z();
+            case (6):
+                return new I();
+            case (7):
+                return new U();
+            default:
+                return null;
+        }
+    }
+
+    public void DropBlock(GameTime gameTime)
+    {
+        if (gameTime.TotalGameTime.TotalMilliseconds > previousDropTime + timeBetweenDrop && canMoveDown)
+        {
+            previousDropTime = gameTime.TotalGameTime.TotalMilliseconds;
+            blockPosition.Y += 1;
+        }
+    }
+
     public void RotateRight()
     {
         bool[,] tempLayout = new bool[blockArraySize, blockArraySize];
@@ -116,7 +144,7 @@ class Blocks
         {
             for (int j = 0; j < blockArraySize; j++)
             {
-                tempLayout[i, j] = currentBlock.layout[i, j];
+                tempLayout[i, j] = this.layout[i, j];
             }
         }
 
@@ -124,7 +152,7 @@ class Blocks
         {
             for (int y = 0; y < 4; y++)
             {
-                currentBlock.layout[x, y] = tempLayout[3 - y, x];
+                this.layout[x, y] = tempLayout[3 - y, x];
             }
         }
     }
@@ -137,7 +165,7 @@ class Blocks
         {
             for (int j = 0; j < blockArraySize; j++)
             {
-                tempLayout[i, j] = currentBlock.layout[i, j];
+                tempLayout[i, j] = this.layout[i, j];
             }
         }
 
@@ -145,20 +173,20 @@ class Blocks
         {
             for (int y = 0; y < 4; y++)
             {
-                currentBlock.layout[x, y] = tempLayout[y, 3 - x];
+                this.layout[x, y] = tempLayout[y, 3 - x];
             }
         }
     }
 
     public void Draw(SpriteBatch spriteBatch, Texture2D texture)
     {
-        for(int y = 0; y < blockArraySize; y++)
+        for (int y = 0; y < blockArraySize; y++)
         {
-            for(int x = 0; x < blockArraySize; x++)
+            for (int x = 0; x < blockArraySize; x++)
             {
-                if (currentBlock.layout[y,x])
+                if (this.layout[y, x])
                 {
-                    spriteBatch.Draw(texture, new Vector2((float) (blockPosition.X + x) * cellWidth, (float) (blockPosition.Y + y) * cellWidth), currentBlock.blockColor);
+                    spriteBatch.Draw(texture, new Vector2((float)(blockPosition.X + x) * cellWidth, (float)(blockPosition.Y + y) * cellWidth), this.blockColor);
                 }
             }
         }
