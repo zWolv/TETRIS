@@ -13,9 +13,11 @@ class Blocks
     bool canMoveLeft = true;
     bool canMoveDown = true;
     const int blockArraySize = 4;
-    double previousTime = 0;
+    double previousTimeDrop = 0;
+    double previousTimePush = 0;
     bool blockPushed = true;
     const int timeToDrop = 1000;
+    const int timeToPush = 700;
 
     Blocks currentBlock;
     public Blocks()
@@ -119,14 +121,14 @@ class Blocks
             int i = x;
             int j = y;
 
-            for (x = 0; x < 4; x++)
+            for (x = 0; x < blockArraySize; x++)
             {
                 if (i < 3)
                 {
                     i++;
                 }
 
-                for (y = 0; y < 4; y++)
+                for (y = 0; y < blockArraySize; y++)
                 {
                     if (j < 3)
                     {
@@ -143,18 +145,18 @@ class Blocks
     public void DropBlock(GameTime gameTime, TetrisGrid grid)
     {
         CanMoveDown(grid);
-        if(gameTime.TotalGameTime.TotalMilliseconds > previousTime + timeToDrop && canMoveDown)
+        if(gameTime.TotalGameTime.TotalMilliseconds > previousTimeDrop + timeToDrop && canMoveDown)
         {
-            previousTime = gameTime.TotalGameTime.TotalMilliseconds;
+            previousTimeDrop = gameTime.TotalGameTime.TotalMilliseconds;
             blockPosition.Y += 1;
         } 
     }
 
     // WORK IN PROGRESS
-    public void PushBlock(TetrisGrid grid)
+    public void PushBlock(TetrisGrid grid, GameTime gameTime)
     {
         CanMoveDown(grid);
-        if (!canMoveDown)
+        if (!canMoveDown && gameTime.TotalGameTime.TotalMilliseconds > previousTimePush + timeToPush)
         {
             for (int y = 0; y < blockArraySize; y++)
             {
@@ -163,12 +165,15 @@ class Blocks
                     if (currentBlock.layout[y, x])
                     {
                         grid.collisionGrid[(int)blockPosition.Y + y, (int)blockPosition.X + x] = true;
+                        grid.colorGrid[(int)blockPosition.Y + y, (int)blockPosition.X + x] = currentBlock.blockColor;
                     }
                 }
             }
             blockPushed = true;
+            previousTimePush = gameTime.TotalGameTime.TotalMilliseconds;
             ResetPosition();
         }
+
     }
 
     public void ResetPosition()
@@ -210,20 +215,18 @@ class Blocks
                     canMoveLeft = true;
                     canMoveRight = true;
                 }
-                else if (currentBlock.layout[y, x])
+                else if (currentBlock.layout[y, x] && blockPosition.X + x == 0)
                 {
-                    if(blockPosition.X + x == 0)
-                    {
-                        canMoveRight = true;
-                        canMoveLeft = false;
-                        goto loopEnd;
-                    }
-                    else if(blockPosition.X + x == 9)
-                    {
-                        canMoveLeft = true;
-                        canMoveRight = false;
-                        goto loopEnd;
-                    }
+
+                    canMoveRight = true;
+                    canMoveLeft = false;
+                    goto loopEnd;
+                }
+                else if(currentBlock.layout[y,x] && blockPosition.X + x == 9)
+                {
+                    canMoveLeft = true;
+                    canMoveRight = false;
+                    goto loopEnd;
                 }
             }
         }
@@ -234,7 +237,7 @@ class Blocks
     {
         CanMoveRightLeft();
         DropBlock(gameTime, grid);
-        PushBlock(grid);
+        PushBlock(grid,gameTime);
 
     }
     public void Draw(SpriteBatch spriteBatch, Texture2D texture)
