@@ -113,6 +113,11 @@ class Blocks
             blockPosition.X += 1;
         }
 
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Down))
+        {
+            blockPosition.Y += 1;
+        }
+
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.A))
         {
             bool[,] tempLayout = new bool[blockArraySize, blockArraySize];
@@ -131,6 +136,27 @@ class Blocks
                 {
                     currentBlock.layout[x, y] = tempLayout[y, 3 - x];
                     //currentBlock.layout[x, y] = currentBlock.layout[x, y];
+                }
+            }
+        }
+
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.D))
+        {
+            bool[,] tempLayout = new bool[blockArraySize, blockArraySize];
+
+            for (int i = 0; i < blockArraySize; i++)
+            {
+                for (int j = 0; j < blockArraySize; j++)
+                {
+                    tempLayout[i, j] = currentBlock.layout[i, j];
+                }
+            }
+
+            for (int x = 0; x < 4; x++)
+            {
+                for (int y = 0; y < 4; y++)
+                {
+                    currentBlock.layout[x, y] = tempLayout[3 - y, x];
                 }
             }
         }
@@ -319,9 +345,9 @@ class O : Blocks
 {
     bool[,] layoutO = new bool[,]
     {
-            {false, true, true, false},
-            {false, true, true, false},
             {false, false, false, false},
+            {false, true, true, false},
+            {false, true, true, false},
             {false, false, false, false}
     };
 
