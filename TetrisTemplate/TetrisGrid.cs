@@ -1,9 +1,5 @@
-﻿using Microsoft.VisualBasic.FileIO;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
 
 /// <summary>
 /// A class for representing the Tetris playing grid.
@@ -12,10 +8,10 @@ class TetrisGrid
 {
     public bool[,] collisionGrid = new bool[20, 10];
     public Color[,] colorGrid = new Color[20, 10];
+
     bool previousCanMoveDown;
     bool blockPushed = true;
     bool pushBlockManual;
-
 
     const int yLength = 0;
     const int xLength = 1;
@@ -39,7 +35,7 @@ class TetrisGrid
 
     /// The number of grid elements in the x-direction.
     public int Width { get { return 10; } }
-   
+
     /// The number of grid elements in the y-direction.
     public int Height { get { return 20; } }
 
@@ -55,8 +51,6 @@ class TetrisGrid
         position = Vector2.Zero;
         Clear();
     }
-
-    
 
     public void PushBlock(GameTime gameTime)
     {
@@ -86,7 +80,6 @@ class TetrisGrid
             previousPushTime = gameTime.TotalGameTime.TotalMilliseconds;
             movingBlock.ResetPosition();
         }
-
     }
 
     //WORK IN PROGRESS
@@ -98,12 +91,12 @@ class TetrisGrid
             int nextBlock = y + blockY + 1;
             for (int x = 0; x < movingBlock.layout.GetLength(xLength); x++)
             {
-                if (!(movingBlock.layout[y,x]))
+                if (!(movingBlock.layout[y, x]))
                 {
                     continue;
                 }
 
-                if(blockY + y >= Height - 1)
+                if (blockY + y >= Height - 1)
                 {
                     canMoveDown = false;
                     break;
@@ -120,22 +113,22 @@ class TetrisGrid
 
     public void HandleInput(InputHelper inputHelper)
     {
-        if(inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.D) && CanRotateRight()) 
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.D) && CanRotateRight())
         {
-                movingBlock.RotateRight();
+            movingBlock.RotateRight();
         }
 
-        if(inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.A) && CanRotateLeft())
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.A) && CanRotateLeft())
         {
             movingBlock.RotateLeft();
         }
 
-        if(inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Left) && CanMoveLeft())
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Left) && CanMoveLeft())
         {
             movingBlock.MoveLeft();
         }
 
-        if(inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Right) && CanMoveRight())
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Right) && CanMoveRight())
         {
             movingBlock.MoveRight();
         }
@@ -164,7 +157,7 @@ class TetrisGrid
     {
         bool canRotateLeft = true;
         movingBlock.RotateLeft();
-        if(!RotateCollisionCheck(canRotateLeft))
+        if (!RotateCollisionCheck(canRotateLeft))
         {
             canRotateLeft = false;
         }
@@ -207,7 +200,6 @@ class TetrisGrid
             int blockRight = blockX + x + 1;
             for (int y = 0; y < movingBlock.layout.GetLength(yLength); y++)
             {
-
                 if (!movingBlock.layout[y, x])
                 {
                     continue;
@@ -236,7 +228,6 @@ class TetrisGrid
             int blockLeft = blockX + x - 1;
             for (int y = 0; y < movingBlock.layout.GetLength(yLength); y++)
             {
-
                 if (!movingBlock.layout[y, x])
                 {
                     continue;
@@ -275,13 +266,12 @@ class TetrisGrid
 
     public void AddMovingBlock()
     {
-        if(blockPushed)
+        if (blockPushed)
         {
             movingBlock = blockMaster.AddBlocks(blockMaster.Random.Next(0, blockVariations - 1));
             blockPushed = false;
         }
     }
-
 
     public void Update(GameTime gameTime, TetrisGrid grid)
     {
@@ -289,8 +279,6 @@ class TetrisGrid
         GetBlockPosition();
         DropBlock(gameTime);
         PushBlock(gameTime);
-
-        
     }
 
     /// <summary>
@@ -300,8 +288,6 @@ class TetrisGrid
     /// <param name="spriteBatch">The SpriteBatch used for drawing sprites and text.</param>
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-        
-
         for (int i = 0; i < Height; i++)
         {
             for (int t = 0; t < Width; t++)
@@ -310,9 +296,9 @@ class TetrisGrid
                 {
                     spriteBatch.Draw(emptyCell, new Vector2((float)t * cellSize, (float)i * cellSize), Color.White);
                 }
-                else if(collisionGrid[i, t])
+                else if (collisionGrid[i, t])
                 {
-                    spriteBatch.Draw(emptyCell, new Vector2((float)t * cellSize, (float)i * cellSize), colorGrid[i,t]);
+                    spriteBatch.Draw(emptyCell, new Vector2((float)t * cellSize, (float)i * cellSize), colorGrid[i, t]);
                 }
             }
         }
@@ -324,6 +310,8 @@ class TetrisGrid
     /// </summary>
     public void Clear()
     {
+        collisionGrid = new bool[Height, Width];
+        colorGrid = new Color[Height, Width];
     }
 }
 

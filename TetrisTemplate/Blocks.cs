@@ -32,7 +32,7 @@ class Blocks
         }
         protected set
         {
-            
+
         }
     }
 
@@ -97,8 +97,6 @@ class Blocks
         }
     }
 
-    
-
     public void RotateRight()
     {
         bool[,] tempLayout = new bool[blockArraySize, blockArraySize];
@@ -154,8 +152,6 @@ class L : Blocks
             {false, false, false, false}
         };
 
-
-
     public L()
     {
     }
@@ -193,7 +189,6 @@ class J : Blocks
 
     public J()
     {
-
     }
 
     public override Color blockColor
@@ -215,7 +210,7 @@ class J : Blocks
         }
     }
 
-   
+
 }
 
 
@@ -231,7 +226,6 @@ class O : Blocks
 
     public O()
     {
-
     }
     public override Color blockColor
     {
@@ -269,7 +263,6 @@ class I : Blocks
 
     public I()
     {
-
     }
     public override Color blockColor
     {
@@ -305,7 +298,6 @@ class S : Blocks
 
     public S()
     {
-
     }
     public override Color blockColor
     {
@@ -340,7 +332,6 @@ class Z : Blocks
 
     public Z()
     {
-
     }
     public override Color blockColor
     {
@@ -375,7 +366,6 @@ class T : Blocks
 
     public T()
     {
-
     }
     public override Color blockColor
     {
@@ -410,7 +400,6 @@ class U : Blocks
 
     public U()
     {
-
     }
 
     public override Color blockColor
