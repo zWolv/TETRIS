@@ -11,6 +11,9 @@ class TetrisGrid
 {
     public bool[,] collisionGrid = new bool[20, 10];
     public Color[,] colorGrid = new Color[20, 10];
+    const int cellSize = 30;
+    const int blockVariations = 8;
+    
 
     /// The sprite of a single empty cell in the grid.
     Texture2D emptyCell;
@@ -39,16 +42,10 @@ class TetrisGrid
     /// <summary>
     /// Updates the grid with new blocks
     /// </summary>
-
-
-
-
-    public void Initialize()
+    public void LoadContent()
     {
         blocks = new Blocks();
-        blocks.addBlocks("I");
     }
-
     public void HandleInput(InputHelper inputHelper)
     {
         blocks.HandleInput(inputHelper);
@@ -56,6 +53,7 @@ class TetrisGrid
 
     public void Update(GameTime gameTime, TetrisGrid grid)
     {
+        blocks.addBlocks(blocks.Random.Next(0, blockVariations - 1));
         blocks.Update(gameTime, grid);
     }
 
@@ -74,11 +72,11 @@ class TetrisGrid
             {
                 if (!collisionGrid[i, t])
                 {
-                    spriteBatch.Draw(emptyCell, new Vector2((float)t * 30, (float)i * 30), Color.White);
+                    spriteBatch.Draw(emptyCell, new Vector2((float)t * cellSize, (float)i * cellSize), Color.White);
                 }
                 else if(collisionGrid[i, t])
                 {
-                    spriteBatch.Draw(emptyCell, new Vector2((float)t * 30, (float)i * 30), Color.Black);
+                    spriteBatch.Draw(emptyCell, new Vector2((float)t * cellSize, (float)i * cellSize), blocks.thisBlock.blockColor);
                 }
             }
         }

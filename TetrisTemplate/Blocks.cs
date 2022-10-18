@@ -6,61 +6,94 @@ using System.ComponentModel;
 class Blocks
 {
     const int cellWidth = 30;
-    protected bool[,] blockArray = new bool[4,4];
+    protected bool[,] blockArray = new bool[4, 4];
     static Random random = new Random();
-    Color color;
-    Vector2 blockPosition = new Vector2(0,0);
+    Vector2 blockPosition = new Vector2(0, 0);
     bool canMoveRight = true;
     bool canMoveLeft = true;
     bool canMoveDown = true;
     const int blockArraySize = 4;
     double previousTime = 0;
+    bool blockPushed = true;
+    const int timeToDrop = 1000;
 
     Blocks currentBlock;
     public Blocks()
     {
 
     }
-     
+
+    public Random Random
+    {
+        get
+        {
+            return random;
+        }
+    }
     public virtual bool[,] layout
     {
         get
         {
-            return new bool[4,4];
+            return new bool[4, 4];
         }
     }
 
-    public void addBlocks(string blockType)
+    public virtual Color blockColor
     {
-
-        switch (blockType)
+        get
         {
-            case ("L"):
-                currentBlock = new L();
-                break;
-            case ("J"):
-                currentBlock = new J();
-                break;
-            case ("O"):
-                currentBlock = new O();
-                break;
-            case ("T"):
-                currentBlock = new T();
-                break;
-            case ("S"):
-                currentBlock = new S();
-                break;
-            case ("Z"):
-                currentBlock = new Z();
-                break;
-            case ("I"):
-                currentBlock = new I();
-                break;
-            case ("U"):
-                currentBlock = new U();
-                break;
-            default:
-                break;
+            return Color.White;
+        }
+    }
+
+    public Blocks thisBlock
+    {
+        get
+        {
+            return currentBlock;
+        }
+    }
+    public void addBlocks(int blockType)
+    {
+        if(blockPushed)
+        {
+            switch (blockType)
+            {
+                case (0):
+                    currentBlock = new L();
+                    blockPushed = false;
+                    break;
+                case (1):
+                    currentBlock = new J();
+                    blockPushed = false;
+                    break;
+                case (2):
+                    currentBlock = new O();
+                    blockPushed = false;
+                    break;
+                case (3):
+                    currentBlock = new T();
+                    blockPushed = false;
+                    break;
+                case (4):
+                    currentBlock = new S();
+                    blockPushed = false;
+                    break;
+                case (5):
+                    currentBlock = new Z();
+                    blockPushed = false;
+                    break;
+                case (6):
+                    currentBlock = new I();
+                    blockPushed = false;
+                    break;
+                case (7):
+                    currentBlock = new U();
+                    blockPushed = false;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -106,9 +139,10 @@ class Blocks
         }
     }
 
-    public void DropBlock(GameTime gameTime)
+    public void DropBlock(GameTime gameTime, TetrisGrid grid)
     {
-        if(gameTime.TotalGameTime.TotalMilliseconds > previousTime + 1000 && canMoveDown)
+        CanMoveDown(grid);
+        if(gameTime.TotalGameTime.TotalMilliseconds > previousTime + timeToDrop && canMoveDown)
         {
             previousTime = gameTime.TotalGameTime.TotalMilliseconds;
             blockPosition.Y += 1;
@@ -118,7 +152,8 @@ class Blocks
     // WORK IN PROGRESS
     public void PushBlock(TetrisGrid grid)
     {
-        if (blockPosition.Y + blockArraySize - 1 == 19)
+        CanMoveDown(grid);
+        if (!canMoveDown)
         {
             for (int y = 0; y < blockArraySize; y++)
             {
@@ -127,33 +162,42 @@ class Blocks
                     if (currentBlock.layout[y, x])
                     {
                         grid.collisionGrid[(int)blockPosition.Y + y, (int)blockPosition.X + x] = true;
-                    } 
+                    }
                 }
             }
+            blockPushed = true;
+            ResetPosition();
         }
+    }
+
+    public void ResetPosition()
+    {
+        blockPosition = new Vector2(0, 4);
     }
 
     //WORK IN PROGRESS
     public void CanMoveDown(TetrisGrid grid)
     {
-        if (blockPosition.Y + blockArraySize - 1 < 19)
+
+        for (int blockY = 0; blockY < blockArraySize; blockY++)
         {
-            for (int y = 0; y < grid.Height; y++)
+            for (int blockX = 0; blockX < blockArraySize; blockX++)
             {
-                for (int x = 0; x < grid.Width; x++)
+                int nextBlock = (int)blockPosition.Y + blockY + 1;
+                if ((currentBlock.layout[blockY, blockX] && nextBlock <= 19 && grid.collisionGrid[nextBlock, blockX + (int)blockPosition.X]) || (currentBlock.layout[blockY, blockX] && blockPosition.Y + blockY >= grid.Height - 1))
                 {
+                    canMoveDown = false;
+                    goto loopEnd;
+                }
+                else
+                {
+                    canMoveDown = true;
                 }
             }
         }
-        else if(blockPosition.Y + blockArraySize - 1 == 19)
-        {
-            canMoveDown = false;
-        }
-        else
-        {
-            canMoveDown = true;
-        }
+        loopEnd:;
     }
+
     public void CanMoveRightLeft()
     {
         for (int x = 0; x < blockArraySize; x++)
@@ -188,8 +232,7 @@ class Blocks
     public void Update(GameTime gameTime, TetrisGrid grid)
     {
         CanMoveRightLeft();
-        CanMoveDown(grid);
-        DropBlock(gameTime);
+        DropBlock(gameTime, grid);
         PushBlock(grid);
 
     }
@@ -201,7 +244,7 @@ class Blocks
             {
                 if (currentBlock.layout[y,x])
                 {
-                    spriteBatch.Draw(texture, new Vector2((float) (blockPosition.X + x) * cellWidth, (float) (blockPosition.Y + y) * cellWidth), Color.Red);
+                    spriteBatch.Draw(texture, new Vector2((float) (blockPosition.X + x) * cellWidth, (float) (blockPosition.Y + y) * cellWidth), currentBlock.blockColor);
                 }
             }
         }
@@ -224,7 +267,14 @@ class L : Blocks
     public L()
     {
     }
-    //color = new Color.Orange
+
+    public override Color blockColor
+    {
+        get
+        {
+            return Color.Orange;
+        }
+    }
 
     public override bool[,] layout
     {
@@ -249,7 +299,14 @@ class J : Blocks
     {
 
     }
-    //color = new Color.DarkBlue;
+
+    public override Color blockColor
+    {
+        get
+        {
+            return Color.DarkBlue;
+        }
+    }
     public override bool[,] layout
     {
         get
@@ -274,7 +331,13 @@ class O : Blocks
     {
 
     }
-    // color = new Color.Yellow;
+    public override Color blockColor
+    {
+        get
+        {
+            return Color.Yellow;
+        }
+    }
 
 
 
@@ -302,7 +365,13 @@ class I : Blocks
     {
 
     }
-    // color = new Color.LightBlue;
+    public override Color blockColor
+    {
+        get
+        {
+            return Color.LightBlue;
+        }
+    }
 
     public override bool[,] layout
     {
@@ -328,7 +397,13 @@ class S : Blocks
     {
 
     }
-    //color = new Color.LightGreen;
+    public override Color blockColor
+    {
+        get
+        {
+            return Color.LightGreen;
+        }
+    }
 
     public override bool[,] layout
     {
@@ -353,7 +428,13 @@ class Z : Blocks
     {
 
     }
-    // color = new Color.Red;
+    public override Color blockColor
+    {
+        get
+        {
+            return Color.Red;
+        }
+    }
 
     public override bool[,] layout
     {
@@ -378,7 +459,13 @@ class T : Blocks
     {
 
     }
-    // color = new Color.Purple;
+    public override Color blockColor
+    {
+        get
+        {
+            return Color.Purple;
+        }
+    }
 
     public override bool[,] layout
     {
@@ -402,6 +489,14 @@ class U : Blocks
     public U()
     {
 
+    }
+
+    public override Color blockColor
+    {
+        get
+        {
+            return Color.Pink;
+        }
     }
 
     public override bool[,] layout
