@@ -5,19 +5,26 @@ using System.ComponentModel;
 
 class Blocks
 {
-    const int cellWidth = 30;
-    protected bool[,] blockArray = new bool[4, 4];
-    static Random random = new Random();
-    Vector2 blockPosition = new Vector2(0, 0);
+    Random random = new Random();
+
+    Vector2 blockPosition = new Vector2(0, 4);
+
+    bool[,] blockArray = new bool[4, 4];
     bool canMoveRight = true;
     bool canMoveLeft = true;
     bool canMoveDown = true;
-    const int blockArraySize = 4;
+    bool previousCanMoveDown = true;
+    bool blockPushed = true;
+
     double previousTimeDrop = 0;
     double previousTimePush = 0;
-    bool blockPushed = true;
+
+    int previousBlockPositionY = 0;
+
+    const int blockArraySize = 4;
     const int timeToDrop = 1000;
-    const int timeToPush = 700;
+    const int timeToPush = 2000;
+    const int cellWidth = 30;
 
     Blocks currentBlock;
     public Blocks()
@@ -144,18 +151,17 @@ class Blocks
 
     public void DropBlock(GameTime gameTime, TetrisGrid grid)
     {
-        CanMoveDown(grid);
         if(gameTime.TotalGameTime.TotalMilliseconds > previousTimeDrop + timeToDrop && canMoveDown)
         {
             previousTimeDrop = gameTime.TotalGameTime.TotalMilliseconds;
             blockPosition.Y += 1;
-        } 
+        }
     }
 
     // WORK IN PROGRESS
     public void PushBlock(TetrisGrid grid, GameTime gameTime)
     {
-        CanMoveDown(grid);
+        GetCurrentPushTime(gameTime);
         if (!canMoveDown && gameTime.TotalGameTime.TotalMilliseconds > previousTimePush + timeToPush)
         {
             for (int y = 0; y < blockArraySize; y++)
@@ -170,6 +176,7 @@ class Blocks
                 }
             }
             blockPushed = true;
+            previousCanMoveDown = true;
             previousTimePush = gameTime.TotalGameTime.TotalMilliseconds;
             ResetPosition();
         }
@@ -178,11 +185,11 @@ class Blocks
 
     public void ResetPosition()
     {
-        blockPosition = new Vector2(0, 4);
+        blockPosition = new Vector2(4,0);
     }
 
     //WORK IN PROGRESS
-    public void CanMoveDown(TetrisGrid grid)
+    public void CanMoveDown(TetrisGrid grid, GameTime gameTime)
     {
 
         for (int blockY = 0; blockY < blockArraySize; blockY++)
@@ -204,25 +211,37 @@ class Blocks
         loopEnd:;
     }
 
-    public void CanMoveRightLeft()
+    public void GetCurrentPushTime(GameTime gameTime)
+    {
+        if (!canMoveDown && previousCanMoveDown != canMoveDown || blockPosition.Y != previousBlockPositionY)
+        {
+            previousTimePush = gameTime.TotalGameTime.TotalMilliseconds;
+            previousCanMoveDown = canMoveDown;
+            previousBlockPositionY = (int)blockPosition.Y;
+        }
+    }
+
+    public void CanMoveRightLeft(TetrisGrid grid)
     {
         for (int x = 0; x < blockArraySize; x++)
         {
+            int blockRight = (int)blockPosition.X + x + 1;
+            int blockLeft = (int)blockPosition.X + x - 1;
             for (int y = 0; y < blockArraySize; y++)
             {
+
                 if (currentBlock.layout[y, x] && blockPosition.X + x > 0 && blockPosition.X + x < 9)
                 {
                     canMoveLeft = true;
                     canMoveRight = true;
                 }
-                else if (currentBlock.layout[y, x] && blockPosition.X + x == 0)
+                else if ((currentBlock.layout[y, x] && blockPosition.X + x <= 0) || (currentBlock.layout[y, x] && blockLeft >= 0 && grid.collisionGrid[y + (int)blockPosition.Y, blockLeft]))
                 {
-
                     canMoveRight = true;
                     canMoveLeft = false;
                     goto loopEnd;
                 }
-                else if(currentBlock.layout[y,x] && blockPosition.X + x == 9)
+                else if ((currentBlock.layout[y, x] && blockPosition.X + x >= 9) || (currentBlock.layout[y, x] && blockRight <= 9 && grid.collisionGrid[y + (int)blockPosition.Y, blockRight]))
                 {
                     canMoveLeft = true;
                     canMoveRight = false;
@@ -235,7 +254,8 @@ class Blocks
 
     public void Update(GameTime gameTime, TetrisGrid grid)
     {
-        CanMoveRightLeft();
+        CanMoveRightLeft(grid);
+        CanMoveDown(grid, gameTime);
         DropBlock(gameTime, grid);
         PushBlock(grid,gameTime);
 
