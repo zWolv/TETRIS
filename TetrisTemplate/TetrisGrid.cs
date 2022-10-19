@@ -174,6 +174,7 @@ class TetrisGrid
             colorGrid[row, x] = Color.White;
         }
     }
+
     public bool CanRotateRight()
     {
         bool canRotateRight = true;
