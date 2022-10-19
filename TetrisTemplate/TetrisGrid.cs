@@ -39,6 +39,23 @@ class TetrisGrid
         Clear();
     }
 
+    public void removeRow()
+    {
+        for(var y = 0; y < 20; y++)
+        {
+            for(var x = 0; x < 10; x++)
+            {
+                if (!collisionGrid[x, y])
+                {
+                    break;
+                } else if(collisionGrid[y, 9])
+                { 
+                    //collisionGrid.RemoveAt
+                }
+            }
+        }
+    }
+
     /// <summary>
     /// Updates the grid with new blocks
     /// </summary>
@@ -64,8 +81,6 @@ class TetrisGrid
     /// <param name="spriteBatch">The SpriteBatch used for drawing sprites and text.</param>
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-        
-
         for (int i = 0; i < Height; i++)
         {
             for (int t = 0; t < Width; t++)
