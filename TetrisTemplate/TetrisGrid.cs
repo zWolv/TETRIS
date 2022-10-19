@@ -190,6 +190,17 @@ class TetrisGrid
         return canRotateRight;
     }
 
+    public void GameOver()
+    {
+        for(int x = 0; x < Width; x++)
+        {
+            if (collisionGrid[0,x])
+            {
+                //gamestate gameover
+            }
+        }
+    }
+
 
     public bool CanRotateLeft()
     {
