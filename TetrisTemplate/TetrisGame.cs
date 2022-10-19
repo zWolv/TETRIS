@@ -13,7 +13,6 @@ class TetrisGame : Game
     /// A static reference to the ContentManager object, used for loading assets.
     /// </summary>
     public static ContentManager ContentManager { get; private set; }
-    
 
     /// <summary>
     /// A static reference to the width and height of the screen.
@@ -47,9 +46,6 @@ class TetrisGame : Game
         inputHelper = new InputHelper();
     }
 
-
-   
-
     protected override void LoadContent()
     {
         spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -57,7 +53,6 @@ class TetrisGame : Game
         // create and reset the game world
         gameWorld = new GameWorld();
         gameWorld.Reset();
-        gameWorld.LoadContent();
     }
 
     protected override void Update(GameTime gameTime)

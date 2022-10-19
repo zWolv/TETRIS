@@ -5,21 +5,13 @@ using System.ComponentModel;
 
 class Blocks
 {
-    const int cellWidth = 30;
-    protected bool[,] blockArray = new bool[4, 4];
-    static Random random = new Random();
-    Vector2 blockPosition = new Vector2(0, 0);
-    bool canMoveRight = true;
-    bool canMoveLeft = true;
-    bool canMoveDown = true;
-    const int blockArraySize = 4;
-    double previousTimeDrop = 0;
-    double previousTimePush = 0;
-    bool blockPushed = true;
-    const int timeToDrop = 1000;
-    const int timeToPush = 700;
+    Random random = new Random();
 
-    Blocks currentBlock;
+    Vector2 blockPosition = new Vector2(4, 0);
+
+    const int blockArraySize = 4;
+    const int cellWidth = 30;
+
     public Blocks()
     {
 
@@ -38,6 +30,10 @@ class Blocks
         {
             return new bool[4, 4];
         }
+        protected set
+        {
+
+        }
     }
 
     public virtual Color blockColor
@@ -48,231 +44,101 @@ class Blocks
         }
     }
 
-    public Blocks thisBlock
+    public Vector2 getBlockPosition
     {
         get
         {
-            return currentBlock;
-        }
-    }
-    public void addBlocks(int blockType)
-    {
-        if(blockPushed)
-        {
-            switch (blockType)
-            {
-                case (0):
-                    currentBlock = new L();
-                    blockPushed = false;
-                    break;
-                case (1):
-                    currentBlock = new J();
-                    blockPushed = false;
-                    break;
-                case (2):
-                    currentBlock = new O();
-                    blockPushed = false;
-                    break;
-                case (3):
-                    currentBlock = new T();
-                    blockPushed = false;
-                    break;
-                case (4):
-                    currentBlock = new S();
-                    blockPushed = false;
-                    break;
-                case (5):
-                    currentBlock = new Z();
-                    blockPushed = false;
-                    break;
-                case (6):
-                    currentBlock = new I();
-                    blockPushed = false;
-                    break;
-                case (7):
-                    currentBlock = new U();
-                    blockPushed = false;
-                    break;
-                default:
-                    break;
-            }
+            return blockPosition;
         }
     }
 
-
-
-    public void HandleInput(InputHelper inputHelper)
+    public void MoveDown()
     {
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Left) && canMoveLeft)
-        {
-            blockPosition.X -= 1;
-        }
-
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Right) && canMoveRight)
-        {
-            blockPosition.X += 1;
-        }
-
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Down))
-        {
-            blockPosition.Y += 1;
-        }
-
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.A))
-        {
-            bool[,] tempLayout = new bool[blockArraySize, blockArraySize];
-
-            for(int i = 0; i < blockArraySize; i++)
-            {
-                for(int j = 0; j < blockArraySize; j++)
-                {
-                    tempLayout[i, j] = currentBlock.layout[i, j];
-                }
-            }
-
-            for (int x = 0; x < 4; x++)
-            {
-                for (int y = 0; y < 4; y++)
-                {
-                    currentBlock.layout[x, y] = tempLayout[y, 3 - x];
-                    //currentBlock.layout[x, y] = currentBlock.layout[x, y];
-                }
-            }
-        }
-
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.D))
-        {
-            bool[,] tempLayout = new bool[blockArraySize, blockArraySize];
-
-            for (int i = 0; i < blockArraySize; i++)
-            {
-                for (int j = 0; j < blockArraySize; j++)
-                {
-                    tempLayout[i, j] = currentBlock.layout[i, j];
-                }
-            }
-
-            for (int x = 0; x < 4; x++)
-            {
-                for (int y = 0; y < 4; y++)
-                {
-                    currentBlock.layout[x, y] = tempLayout[3 - y, x];
-                }
-            }
-        }
+        blockPosition.Y += 1;
     }
 
-    public void DropBlock(GameTime gameTime, TetrisGrid grid)
+    public void MoveLeft()
     {
-        CanMoveDown(grid);
-        if(gameTime.TotalGameTime.TotalMilliseconds > previousTimeDrop + timeToDrop && canMoveDown)
-        {
-            previousTimeDrop = gameTime.TotalGameTime.TotalMilliseconds;
-            blockPosition.Y += 1;
-        } 
+        blockPosition.X -= 1;
     }
 
-    // WORK IN PROGRESS
-    public void PushBlock(TetrisGrid grid, GameTime gameTime)
+    public void MoveRight()
     {
-        CanMoveDown(grid);
-        if (!canMoveDown && gameTime.TotalGameTime.TotalMilliseconds > previousTimePush + timeToPush)
-        {
-            for (int y = 0; y < blockArraySize; y++)
-            {
-                for (int x = 0; x < blockArraySize; x++)
-                {
-                    if (currentBlock.layout[y, x])
-                    {
-                        grid.collisionGrid[(int)blockPosition.Y + y, (int)blockPosition.X + x] = true;
-                        grid.colorGrid[(int)blockPosition.Y + y, (int)blockPosition.X + x] = currentBlock.blockColor;
-                    }
-                }
-            }
-            blockPushed = true;
-            previousTimePush = gameTime.TotalGameTime.TotalMilliseconds;
-            ResetPosition();
-        }
-
+        blockPosition.X += 1;
     }
 
     public void ResetPosition()
     {
-        blockPosition = new Vector2(0, 4);
+        blockPosition = new Vector2(4, 0);
     }
 
-    //WORK IN PROGRESS
-    public void CanMoveDown(TetrisGrid grid)
+    public Blocks AddBlocks(int blockType)
     {
-
-        for (int blockY = 0; blockY < blockArraySize; blockY++)
+        switch (blockType)
         {
-            for (int blockX = 0; blockX < blockArraySize; blockX++)
+            case (0):
+                return new L();
+            case (1):
+                return new J();
+            case (2):
+                return new O();
+            case (3):
+                return new T();
+            case (4):
+                return new S();
+            case (5):
+                return new Z();
+            case (6):
+                return new I();
+            case (7):
+                return new U();
+            default:
+                return null;
+        }
+    }
+
+    public void RotateRight()
+    {
+        bool[,] tempLayout = new bool[blockArraySize, blockArraySize];
+
+
+        for (int x = 0; x < 4; x++)
+        {
+            for (int y = 0; y < 4; y++)
             {
-                int nextBlock = (int)blockPosition.Y + blockY + 1;
-                if ((currentBlock.layout[blockY, blockX] && nextBlock <= 19 && grid.collisionGrid[nextBlock, blockX + (int)blockPosition.X]) || (currentBlock.layout[blockY, blockX] && blockPosition.Y + blockY >= grid.Height - 1))
-                {
-                    canMoveDown = false;
-                    goto loopEnd;
-                }
-                else
-                {
-                    canMoveDown = true;
-                }
+                tempLayout[x, y] = this.layout[3 - y, x];
             }
         }
-        loopEnd:;
+        this.layout = tempLayout;
     }
 
-    public void CanMoveRightLeft()
+    public void RotateLeft()
     {
-        for (int x = 0; x < blockArraySize; x++)
-        {
-            for (int y = 0; y < blockArraySize; y++)
-            {
-                if (currentBlock.layout[y, x] && blockPosition.X + x > 0 && blockPosition.X + x < 9)
-                {
-                    canMoveLeft = true;
-                    canMoveRight = true;
-                }
-                else if (currentBlock.layout[y, x] && blockPosition.X + x == 0)
-                {
+        bool[,] tempLayout = new bool[blockArraySize, blockArraySize];
 
-                    canMoveRight = true;
-                    canMoveLeft = false;
-                    goto loopEnd;
-                }
-                else if(currentBlock.layout[y,x] && blockPosition.X + x == 9)
-                {
-                    canMoveLeft = true;
-                    canMoveRight = false;
-                    goto loopEnd;
-                }
+        for (int x = 0; x < 4; x++)
+        {
+            for (int y = 0; y < 4; y++)
+            {
+                tempLayout[x, y] = this.layout[y, 3 - x];
             }
         }
-        loopEnd:;
+
+        this.layout = tempLayout;
     }
 
-    public void Update(GameTime gameTime, TetrisGrid grid)
-    {
-        CanMoveRightLeft();
-        DropBlock(gameTime, grid);
-        PushBlock(grid,gameTime);
-
-    }
     public void Draw(SpriteBatch spriteBatch, Texture2D texture)
     {
-        for(int y = 0; y < blockArraySize; y++)
+        for (int y = 0; y < blockArraySize; y++)
         {
-            for(int x = 0; x < blockArraySize; x++)
+            for (int x = 0; x < blockArraySize; x++)
             {
-                if (currentBlock.layout[y,x])
+                if (this.layout[y, x])
                 {
-                    spriteBatch.Draw(texture, new Vector2((float) (blockPosition.X + x) * cellWidth, (float) (blockPosition.Y + y) * cellWidth), currentBlock.blockColor);
+                    spriteBatch.Draw(texture, new Vector2((float)(blockPosition.X + x) * cellWidth, (float)(blockPosition.Y + y) * cellWidth), this.blockColor);
                 }
             }
         }
-        
     }
 }
 
@@ -285,8 +151,6 @@ class L : Blocks
             {false, true, true, false},
             {false, false, false, false}
         };
-
-
 
     public L()
     {
@@ -306,6 +170,10 @@ class L : Blocks
         {
             return layoutL;
         }
+        protected set
+        {
+            layoutL = value;
+        }
     }
 }
 
@@ -321,7 +189,6 @@ class J : Blocks
 
     public J()
     {
-
     }
 
     public override Color blockColor
@@ -337,7 +204,13 @@ class J : Blocks
         {
             return layoutJ;
         }
+        protected set
+        {
+            layoutJ = value;
+        }
     }
+
+
 }
 
 
@@ -353,7 +226,6 @@ class O : Blocks
 
     public O()
     {
-
     }
     public override Color blockColor
     {
@@ -371,6 +243,10 @@ class O : Blocks
         {
             return layoutO;
         }
+        protected set
+        {
+            layoutO = value;
+        }
     }
 }
 
@@ -387,7 +263,6 @@ class I : Blocks
 
     public I()
     {
-
     }
     public override Color blockColor
     {
@@ -403,6 +278,10 @@ class I : Blocks
         {
             return layoutI;
         }
+        protected set
+        {
+            layoutI = value;
+        }
     }
 }
 
@@ -411,15 +290,14 @@ class S : Blocks
 
     bool[,] layoutS = new bool[,]
     {
-            {false, false, true, true},
+            {false, true, false, false },
             {false, true, true, false},
-            {false, false, false, false},
+            {false, false, true, false},
             {false, false, false, false}
     };
 
     public S()
     {
-
     }
     public override Color blockColor
     {
@@ -434,6 +312,10 @@ class S : Blocks
         get
         {
             return layoutS;
+        }
+        protected set
+        {
+            layoutS = value;
         }
     }
 }
@@ -450,7 +332,6 @@ class Z : Blocks
 
     public Z()
     {
-
     }
     public override Color blockColor
     {
@@ -465,6 +346,10 @@ class Z : Blocks
         get
         {
             return layoutZ;
+        }
+        protected set
+        {
+            layoutZ = value;
         }
     }
 }
@@ -481,7 +366,6 @@ class T : Blocks
 
     public T()
     {
-
     }
     public override Color blockColor
     {
@@ -496,6 +380,10 @@ class T : Blocks
         get
         {
             return layoutT;
+        }
+        protected set
+        {
+            layoutT = value;
         }
     }
 }
@@ -512,7 +400,6 @@ class U : Blocks
 
     public U()
     {
-
     }
 
     public override Color blockColor
@@ -528,6 +415,10 @@ class U : Blocks
         get
         {
             return layoutU;
+        }
+        protected set
+        {
+            layoutU = value;
         }
     }
 }
