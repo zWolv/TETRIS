@@ -80,6 +80,7 @@ class TetrisGrid
             previousCanMoveDown = true;
             previousPushTime = gameTime.TotalGameTime.TotalMilliseconds;
             movingBlock.ResetPosition();
+            CheckRow();
         }
     }
 
@@ -141,6 +142,38 @@ class TetrisGrid
         }
     }
 
+    public void CheckRow()
+    {
+        int counter = 0;
+        for (int y = 0; y < Height; y++)
+        {
+            counter = 0;
+            for (int x = 0; x < Width; x++)
+            {
+                if (!collisionGrid[y, x])
+                {
+                    continue;
+                }
+                else
+                {
+                    counter++;
+                }
+            }
+            if (counter == 10)
+            {
+                RemoveRow(y);
+            }
+        }
+    }
+
+    public void RemoveRow(int row)
+    {
+        for(int x = 0; x < Width; x++)
+        {
+            collisionGrid[row, x] = false;
+            colorGrid[row, x] = Color.White;
+        }
+    }
     public bool CanRotateRight()
     {
         bool canRotateRight = true;
