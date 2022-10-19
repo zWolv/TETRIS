@@ -38,6 +38,9 @@ class GameWorld
     /// </summary>
     TetrisGrid grid;
 
+    //block
+    Blocks block;
+
     public GameWorld()
     {
         random = new Random();
@@ -46,22 +49,59 @@ class GameWorld
         font = TetrisGame.ContentManager.Load<SpriteFont>("SpelFont");
 
         grid = new TetrisGrid();
+        block = new Blocks();
+        block = block.CreateBlock(random.Next(8));
     }
 
     public void HandleInput(GameTime gameTime, InputHelper inputHelper)
     {
-        grid.HandleInput(inputHelper);
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.D) && grid.CanRotateRight(block))
+        {
+            block.RotateRight();
+        }
+
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.A) && grid.CanRotateLeft(block))
+        {
+            block.RotateLeft();
+        }
+
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Left) && grid.CanMoveLeft(block))
+        {
+            block.MoveLeft();
+        }
+
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Right) && grid.CanMoveRight(block))
+        {
+
+            block.MoveRight();
+        }
+
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Space))
+        {
+            while (grid.CanMoveDown(block))
+            { 
+                block.MoveDown();
+            }
+
+            grid.addToGrid(block);
+        }
+
+        //temporary
+        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Down) && grid.CanMoveDown(block))
+        {
+            block.MoveDown();
+        }
     }
 
     public void Update(GameTime gameTime)
     {
-        grid.Update(gameTime, grid);
+
     }
 
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
         spriteBatch.Begin();
-        grid.Draw(gameTime, spriteBatch);
+        grid.Draw(gameTime, spriteBatch, block);
         spriteBatch.End();
     }
 

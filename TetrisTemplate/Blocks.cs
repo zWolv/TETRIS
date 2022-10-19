@@ -71,7 +71,16 @@ class Blocks
         blockPosition = new Vector2(4, 0);
     }
 
-    public Blocks AddBlocks(int blockType)
+    // gametime timing in update van gameworld
+    //public void DropBlock(GameTime gameTime)
+    //{
+    //    if (gameTime.TotalGameTime.TotalMilliseconds > previousDropTime + timeBetweenDrop && CanMoveDown())
+    //    {
+    //        previousDropTime = gameTime.TotalGameTime.TotalMilliseconds;
+    //        this.MoveDown();
+    //    }
+    //}
+    public Blocks CreateBlock(int blockType)
     {
         switch (blockType)
         {
@@ -150,10 +159,6 @@ class L : Blocks
             {false, true, true}
         };
 
-    public L()
-    {
-    }
-
     public override Color blockColor
     {
         get
@@ -184,10 +189,6 @@ class J : Blocks
             {false, true, true}
 };
 
-    public J()
-    {
-    }
-
     public override Color blockColor
     {
         get
@@ -206,8 +207,6 @@ class J : Blocks
             layoutJ = value;
         }
     }
-
-
 }
 
 
@@ -219,9 +218,6 @@ class O : Blocks
             {true, true}
     };
 
-    public O()
-    {
-    }
     public override Color blockColor
     {
         get
@@ -229,8 +225,6 @@ class O : Blocks
             return Color.Yellow;
         }
     }
-
-
 
     public override bool[,] layout
     {
@@ -255,10 +249,6 @@ class I : Blocks
             {false, true, false, false}
     };
 
-
-    public I()
-    {
-    }
     public override Color blockColor
     {
         get
@@ -290,9 +280,6 @@ class S : Blocks
             {false, false, true}
     };
 
-    public S()
-    {
-    }
     public override Color blockColor
     {
         get
@@ -323,9 +310,6 @@ class Z : Blocks
             {false, false, false}
     };
 
-    public Z()
-    {
-    }
     public override Color blockColor
     {
         get
@@ -356,9 +340,6 @@ class T : Blocks
             {false, false, true}
     };
 
-    public T()
-    {
-    }
     public override Color blockColor
     {
         get
@@ -388,10 +369,6 @@ class U : Blocks
             {true, false, true},
             {true, true, true}
     };
-
-    public U()
-    {
-    }
 
     public override Color blockColor
     {
