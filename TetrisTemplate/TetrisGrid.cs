@@ -36,54 +36,33 @@ class TetrisGrid
 
     /// The number of grid elements in the y-direction.
     public int Height { get { return 20; } }
-
-    Blocks blockMaster;
-    Blocks movingBlock;
     /// <summary>
     /// Creates a new TetrisGrid.
     /// </summary>
     /// <param name="b"></param>
     public TetrisGrid()
     {
-        blockMaster = new Blocks();
         emptyCell = TetrisGame.ContentManager.Load<Texture2D>("block");
         position = Vector2.Zero;
         Clear();
     }
-
-    // klopt nog niet
-    public void addToGrid(Blocks block, GameTime gameTime = null)
+    public void addToGrid(Blocks block)
     {
-        if (!CanMoveDown(block) && previousCanMoveDown != CanMoveDown(block) || block.getBlockPosition.Y != previousBlockY)
-        {
-            previousPushTime = gameTime.TotalGameTime.TotalMilliseconds;
-            previousCanMoveDown = CanMoveDown(block);
-            previousBlockY = (int)block.getBlockPosition.Y;
-        }
-
-        if ((!CanMoveDown(block) && gameTime.TotalGameTime.TotalMilliseconds > previousPushTime + timeUntilPush) || pushBlockManual)
-        {
-            pushBlockManual = false;
-            for (int y = 0; y < movingBlock.layout.GetLength(yLength); y++)
+            for (int y = 0; y < block.layout.GetLength(yLength); y++)
             {
-                for (int x = 0; x < movingBlock.layout.GetLength(xLength); x++)
+                for (int x = 0; x < block.layout.GetLength(xLength); x++)
                 {
-                    if (movingBlock.layout[y, x])
+                    if (block.layout[y, x])
                     {
-                        collisionGrid[blockY + y, blockX + x] = true;
-                        colorGrid[blockY + y, blockX + x] = movingBlock.blockColor;
+                        collisionGrid[(int)block.getBlockPosition.Y + y, (int)block.getBlockPosition.X + x] = true;
+                        colorGrid[(int)block.getBlockPosition.Y + y, (int)block.getBlockPosition.X + x] = block.blockColor;
                     }
                 }
             }
-            blockPushed = true;
-            previousCanMoveDown = true;
-            previousPushTime = gameTime.TotalGameTime.TotalMilliseconds;
             block.ResetPosition();
             CheckRow();
-        }
     }
 
-    //WORK IN PROGRESS
     public bool CanMoveDown(Blocks block)
     {
         bool canMoveDown = true;

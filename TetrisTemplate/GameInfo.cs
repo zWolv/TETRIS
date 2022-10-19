@@ -13,7 +13,7 @@ namespace TetrisTemplate
         private SpriteFont scoreDisplay;
         public void LoadContent(ContentManager content)
         {
-            scoreDisplay = content.Load<SpriteFont>();
+            //scoreDisplay = content.Load<SpriteFont>();
         }
         
         public void scoreUpdate()

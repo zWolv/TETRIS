@@ -13,20 +13,26 @@ class GameWorld
     /// </summary>
     enum GameState
     {
+        Menu,
         Playing,
         GameOver
     }
 
+    const int timeBetweenDrops = 1000;
+    const int timeUntilAddedToGrid = 2000;
     /// <summary>
     /// The random-number generator of the game.
     /// </summary>
     public static Random Random { get { return random; } }
     static Random random;
 
-    /// <summary>
-    /// The main font of the game.
-    /// </summary>
-    SpriteFont font;
+
+    double previousGameTime = 0;
+
+/// <summary>
+/// The main font of the game.
+/// </summary>
+SpriteFont font;
 
     /// <summary>
     /// The current game state.
@@ -84,6 +90,7 @@ class GameWorld
             }
 
             grid.addToGrid(block);
+            block = block.CreateBlock(random.Next(8));
         }
 
         //temporary
@@ -93,9 +100,31 @@ class GameWorld
         }
     }
 
+    //naamgeving parameters ??
+    public bool checkIfTimeElapsed(GameTime gameTime,double timeElapsed, bool additionalCondition = true)
+    {
+        if (gameTime.TotalGameTime.TotalMilliseconds > previousGameTime + timeBetweenDrops && additionalCondition)
+        {
+            previousGameTime = gameTime.TotalGameTime.TotalMilliseconds;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     public void Update(GameTime gameTime)
     {
+        if(checkIfTimeElapsed(gameTime,timeBetweenDrops, grid.CanMoveDown(block)))
+        {
+            block.MoveDown();
+        }
 
+        if (checkIfTimeElapsed(gameTime, timeUntilAddedToGrid, !grid.CanMoveDown(block)))
+        {
+            grid.addToGrid(block);
+            block = block.CreateBlock(random.Next(8));
+        }
     }
 
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -105,8 +134,11 @@ class GameWorld
         spriteBatch.End();
     }
 
+
+    // WORK IN PROGRESS
     public void Reset()
     {
+        grid.Clear();
     }
 
 }

@@ -8,7 +8,6 @@ class Blocks
     Random random = new Random();
 
     Vector2 blockPosition = new Vector2(4, 0);
-
     const int cellWidth = 30;
 
     public Blocks()
@@ -23,6 +22,7 @@ class Blocks
             return random;
         }
     }
+
     public virtual bool[,] layout
     {
         get
