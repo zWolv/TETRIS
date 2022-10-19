@@ -115,6 +115,11 @@ class TetrisGrid
 
     public void HandleInput(InputHelper inputHelper)
     {
+        if(movingBlock != null)
+        {
+            GetBlockPosition();
+        }
+
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.D) && CanRotateRight())
         {
             movingBlock.RotateRight();
@@ -132,7 +137,20 @@ class TetrisGrid
 
         if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Right) && CanMoveRight())
         {
+            
             movingBlock.MoveRight();
+        }
+
+        if(inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Space))
+        {
+            while(CanMoveDown())
+            {
+                GetBlockPosition();
+                movingBlock.MoveDown();
+                GetBlockPosition();
+            }
+
+            pushBlockManual = true;
         }
 
         //temporary
@@ -162,6 +180,7 @@ class TetrisGrid
             if (counter == Width)
             {
                 DropGrid(y);
+
             }
         }
     }
@@ -194,7 +213,7 @@ class TetrisGrid
     {
         for(int x = 0; x < Width; x++)
         {
-            if (collisionGrid[0,x])
+            if (collisionGrid[0,x] && !CanMoveDown())
             {
                 //gamestate gameover
             }
