@@ -145,35 +145,39 @@ class TetrisGrid
     public void CheckRow()
     {
         int counter = 0;
-        for (int y = 0; y < Height; y++)
+        for (int y = Height - 1; y >= 0; y--)
         {
             counter = 0;
             for (int x = 0; x < Width; x++)
             {
                 if (!collisionGrid[y, x])
                 {
-                    continue;
+                    break;
                 }
                 else
                 {
                     counter++;
                 }
             }
-            if (counter == 10)
+            if (counter == Width)
             {
-                RemoveRow(y);
+                DropGrid(y);
             }
         }
     }
 
-    public void RemoveRow(int row)
+    public void DropGrid(int rowRemoved)
     {
-        for(int x = 0; x < Width; x++)
+        for(int y = rowRemoved; y > 0 ; y--)
         {
-            collisionGrid[row, x] = false;
-            colorGrid[row, x] = Color.White;
+            for(int x = 0; x < Width; x++)
+            {
+                    collisionGrid[y, x] = collisionGrid[y - 1, x];
+                    colorGrid[y, x] = colorGrid[y - 1, x];
+            }
         }
     }
+
     public bool CanRotateRight()
     {
         bool canRotateRight = true;
