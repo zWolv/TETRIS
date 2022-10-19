@@ -145,6 +145,8 @@ class TetrisGrid
     public void CheckRow()
     {
         int counter = 0;
+        int removedRows = 0;
+
         for (int y = Height - 1; y >= 0; y--)
         {
             counter = 0;
@@ -162,8 +164,16 @@ class TetrisGrid
             if (counter == Width)
             {
                 DropGrid(y);
+                removedRows++;
             }
+
         }
+        GiveScore(removedRows);
+    }
+
+    public int GiveScore(int rows)
+    {
+        return rows;
     }
 
     public void DropGrid(int rowRemoved)
