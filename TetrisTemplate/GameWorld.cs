@@ -32,26 +32,24 @@ class GameWorld
     public static Random Random { get { return random; } }
     static Random random;
 
-
+    Vector2 futureBlockPosition = new Vector2(13, 5);
+    Vector2 currentBlockPosition = new Vector2(4, 0);
     double previousGameTime = 0;
-
-    /// <summary>
-    /// The main font of the game.
-    /// </summary>
-    SpriteFont font;
 
     /// <summary>
     /// The current game state.
     /// </summary>
     GameStates gameState;
+    GameStates previousGameState;
 
     /// <summary>
     /// The main grid of the game.
     /// </summary>
     TetrisGrid grid;
 
-    //block
-    Blocks block;
+    //blocks
+    Block currentBlock;
+    Block futureBlock;
 
     //Gameinfo
     GameInfo gameInfo;
@@ -61,15 +59,34 @@ class GameWorld
     public GameWorld()
     {
         random = new Random();
-        gameState = GameStates.Menu;
+        gameState = GameStates.Playing;
+    }
 
-        font = TetrisGame.ContentManager.Load<SpriteFont>("SpelFont");
-
-        grid = new TetrisGrid();
-        block = new Blocks();
-        block = block.CreateBlock(random.Next(blockVariations + 1));
-        gameInfo = new GameInfo();
-        menu = new Menu();
+    public void Initialize()
+    {
+        if(gameState != previousGameState)
+        {
+            previousGameState = gameState;
+            switch (gameState)
+            {
+                case GameStates.Playing:
+                    gameInfo = new GameInfo();
+                    grid = new TetrisGrid();
+                    currentBlock = new Block(currentBlockPosition, random.Next(blockVariations + 1));
+                    futureBlock = new Block(futureBlockPosition, random.Next(blockVariations + 1));
+                    break;
+                case GameStates.Menu:
+                    menu = new Menu();
+                    break;
+                case GameStates.GameOver:
+                    // maak gameoverscherm
+                    break;
+                default:
+                    break;
+            }
+        }
+        
+        
     }
 
     public void levelSpeedup()
@@ -90,43 +107,46 @@ class GameWorld
         switch(gameState)
         {
             case GameStates.Playing:
-                if (inputHelper.KeyPressed(Keys.D) && grid.CanRotateRight(block))
+                if (inputHelper.KeyPressed(Keys.D) && grid.CanRotateRight(currentBlock))
                 {
-                    block.RotateRight();
+                    currentBlock.RotateRight();
                 }
 
-                if (inputHelper.KeyPressed(Keys.A) && grid.CanRotateLeft(block))
+                if (inputHelper.KeyPressed(Keys.A) && grid.CanRotateLeft(currentBlock))
                 {
-                    block.RotateLeft();
+                    currentBlock.RotateLeft();
                 }
 
-                if (inputHelper.KeyPressed(Keys.Left) && grid.CanMoveLeft(block))
+                if (inputHelper.KeyPressed(Keys.Left) && !grid.CheckCollision(currentBlock, new Vector2(currentBlock.getBlockPosition.X - 1, currentBlock.getBlockPosition.Y)))
                 {
-                    block.MoveLeft();
+                    currentBlock.MoveLeft();
                 }
 
-                if (inputHelper.KeyPressed(Keys.Right) && grid.CanMoveRight(block))
+                if (inputHelper.KeyPressed(Keys.Right) && !grid.CheckCollision(currentBlock, new Vector2(currentBlock.getBlockPosition.X + 1, currentBlock.getBlockPosition.Y)))
                 {
 
-                    block.MoveRight();
+                    currentBlock.MoveRight();
                 }
 
                 if (inputHelper.KeyPressed(Keys.Space))
                 {
-                    while (grid.CanMoveDown(block))
+                    while (!grid.CheckCollision(currentBlock, new Vector2(currentBlock.getBlockPosition.X, currentBlock.getBlockPosition.Y + 1)))
                     {
-                        block.MoveDown();
+                        currentBlock.MoveDown();
                     }
 
-                    grid.AddToGrid(block);
-                    block = block.CreateBlock(random.Next(blockVariations + 1));
+                    grid.AddToGrid(currentBlock);
+                    currentBlock = futureBlock;
+                    currentBlock.MoveToStartPosition();
+                    futureBlock = new Block(futureBlockPosition, random.Next(blockVariations + 1));
                 }
 
                 //temporary
-                if (inputHelper.KeyPressed(Keys.Down) && grid.CanMoveDown(block))
+                if (inputHelper.KeyPressed(Keys.Down) && !grid.CheckCollision(currentBlock, new Vector2(currentBlock.getBlockPosition.X, currentBlock.getBlockPosition.Y + 1)))
                 {
-                    block.MoveDown();
+                    currentBlock.MoveDown();
                 }
+
                 break;
             case GameStates.Menu:
                 // menu knoppen etc
@@ -165,23 +185,25 @@ class GameWorld
         {
             case GameStates.Playing:
                 levelSpeedup();
-                if (checkIfTimeElapsed(gameTime, timeBetweenDrops, grid.CanMoveDown(block)))
+                if (checkIfTimeElapsed(gameTime, timeBetweenDrops, !grid.CheckCollision(currentBlock, new Vector2(currentBlock.getBlockPosition.X, currentBlock.getBlockPosition.Y + 1))))
                 {
-                    block.MoveDown();
+                    currentBlock.MoveDown();
                 }
 
-                if (checkIfTimeElapsed(gameTime, timeUntilAddedToGrid, !grid.CanMoveDown(block)))
+                if (checkIfTimeElapsed(gameTime, timeUntilAddedToGrid, grid.CheckCollision(currentBlock, new Vector2(currentBlock.getBlockPosition.X, currentBlock.getBlockPosition.Y + 1))))
                 {
-                    grid.AddToGrid(block);
-                    block = block.CreateBlock(random.Next(blockVariations + 1));
+                    grid.AddToGrid(currentBlock);
+                    currentBlock = futureBlock;
+                    currentBlock.MoveToStartPosition();
+                    futureBlock = new Block(futureBlockPosition, random.Next(blockVariations + 1));
                 }
 
                 grid.CheckRow(ref gameInfo.scoreRows);
                 gameInfo.UpdateScore();
                 gameInfo.UpdateLevel(grid.getLevelRows);
-                if (grid.GameOverCollision(block))
+                if (grid.GameOverCollision(currentBlock))
                 {
-                    gameState = GameStates.GameOver;
+                   gameState = GameStates.GameOver;
                 }
                 break;
             case GameStates.GameOver:
@@ -199,7 +221,9 @@ class GameWorld
         {
             case GameStates.Playing:
                 spriteBatch.Begin();
-                grid.Draw(gameTime, spriteBatch, block);
+                grid.Draw(gameTime, spriteBatch, currentBlock);
+                futureBlock.Draw(spriteBatch, grid.getTexture);
+                currentBlock.Draw(spriteBatch, grid.getTexture);
                 gameInfo.Draw(spriteBatch);
                 spriteBatch.End();
                 break;
@@ -212,12 +236,4 @@ class GameWorld
         }
         
     }
-
-
-    // WORK IN PROGRESS
-    public void Reset()
-    {
-        grid.Clear();
-    }
-
 }

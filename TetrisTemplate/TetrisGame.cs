@@ -50,15 +50,14 @@ class TetrisGame : Game
     protected override void LoadContent()
     {
         spriteBatch = new SpriteBatch(GraphicsDevice);
-
         // create and reset the game world
         gameWorld = new GameWorld();
-        gameWorld.Reset();
     }
 
     protected override void Update(GameTime gameTime)
     {
         inputHelper.Update(gameTime);
+        gameWorld.Initialize();
         gameWorld.HandleInput(gameTime, inputHelper);
         gameWorld.Update(gameTime);
     }
