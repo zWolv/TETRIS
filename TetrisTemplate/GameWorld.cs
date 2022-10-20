@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Diagnostics;
+using System.Security.Cryptography;
 using TetrisTemplate;
 
 /// <summary>
@@ -22,8 +23,8 @@ class GameWorld
         Playing,
         GameOver
     }
-
-    const int timeBetweenDrops = 1000;
+    const int defaultTimeBetweenDrops = 1000;
+    int timeBetweenDrops;
     const int timeUntilAddedToGrid = 2000;
     /// <summary>
     /// The random-number generator of the game.
@@ -69,6 +70,18 @@ class GameWorld
         block = block.CreateBlock(random.Next(blockVariations + 1));
         gameInfo = new GameInfo();
         menu = new Menu();
+    }
+
+    public void levelSpeedup()
+    {
+        if (gameInfo.getLevel != 1)
+        {
+            timeBetweenDrops = defaultTimeBetweenDrops / (int)(gameInfo.getLevel * 0.65);
+        }
+        else
+        {
+            timeBetweenDrops = defaultTimeBetweenDrops;
+        }
     }
 
     public void HandleInput(GameTime gameTime, InputHelper inputHelper)
@@ -151,6 +164,7 @@ class GameWorld
         switch(gameState)
         {
             case GameStates.Playing:
+                levelSpeedup();
                 if (checkIfTimeElapsed(gameTime, timeBetweenDrops, grid.CanMoveDown(block)))
                 {
                     block.MoveDown();
@@ -187,7 +201,6 @@ class GameWorld
                 spriteBatch.Begin();
                 grid.Draw(gameTime, spriteBatch, block);
                 gameInfo.Draw(spriteBatch);
-                menu.Draw(spriteBatch);
                 spriteBatch.End();
                 break;
             case GameStates.GameOver:
