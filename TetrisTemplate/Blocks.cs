@@ -5,22 +5,12 @@ using System.ComponentModel;
 
 class Blocks
 {
-    Random random = new Random();
-
     Vector2 blockPosition = new Vector2(4, 0);
     const int cellWidth = 30;
 
     public Blocks()
     {
 
-    }
-
-    public Random Random
-    {
-        get
-        {
-            return random;
-        }
     }
 
     public virtual bool[,] layout
@@ -71,15 +61,6 @@ class Blocks
         blockPosition = new Vector2(4, 0);
     }
 
-    // gametime timing in update van gameworld
-    //public void DropBlock(GameTime gameTime)
-    //{
-    //    if (gameTime.TotalGameTime.TotalMilliseconds > previousDropTime + timeBetweenDrop && CanMoveDown())
-    //    {
-    //        previousDropTime = gameTime.TotalGameTime.TotalMilliseconds;
-    //        this.MoveDown();
-    //    }
-    //}
     public Blocks CreateBlock(int blockType)
     {
         switch (blockType)
@@ -335,9 +316,9 @@ class T : Blocks
 {
     bool[,] layoutT = new bool[,]
     {
-            {false, false, false},
+            {false, true, false},
             { true, true, true},
-            {false, false, true}
+            {false, false, false}
     };
 
     public override Color blockColor

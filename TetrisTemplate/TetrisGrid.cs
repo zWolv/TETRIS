@@ -9,21 +9,11 @@ class TetrisGrid
     public bool[,] collisionGrid = new bool[20, 10];
     public Color[,] colorGrid = new Color[20, 10];
 
-    bool previousCanMoveDown;
-    bool blockPushed = true;
-    bool pushBlockManual;
-
     const int yLength = 0;
     const int xLength = 1;
     const int cellSize = 30;
-    const int blockVariations = 8;
-    const int timeUntilPush = 2000;
 
-    double previousPushTime;
-
-    int blockY;
-    int blockX;
-    int previousBlockY;
+    int rowCounterForLevel = 0;
 
     /// The sprite of a single empty cell in the grid.
     Texture2D emptyCell;
@@ -46,7 +36,7 @@ class TetrisGrid
         position = Vector2.Zero;
         Clear();
     }
-    public void addToGrid(Blocks block)
+    public void AddToGrid(Blocks block)
     {
             for (int y = 0; y < block.layout.GetLength(yLength); y++)
             {
@@ -60,7 +50,6 @@ class TetrisGrid
                 }
             }
             block.ResetPosition();
-            CheckRow();
     }
 
     public bool CanMoveDown(Blocks block)
@@ -91,12 +80,11 @@ class TetrisGrid
         return canMoveDown;
     }
 
-    public void CheckRow()
+    public void CheckRow(ref int scoreRows)
     {
         int counter = 0;
-        int removedRows = 0;
-
-        for (int y = Height - 1; y >= 0; y--)
+        int rowCounterForScore = 0;
+        for (int y = 0; y < Height; y++)
         {
             counter = 0;
             for (int x = 0; x < Width; x++)
@@ -112,20 +100,23 @@ class TetrisGrid
             }
             if (counter == Width)
             {
-                DropGrid(y);
-                removedRows++;
+                LowerGrid(y);
+                rowCounterForScore++;
+                rowCounterForLevel++;
             }
-
         }
-        GiveScore(removedRows);
+        scoreRows = rowCounterForScore;
     }
 
-    public int GiveScore(int rows)
+
+    public int getLevelRows
     {
-        return rows;
+        get
+        {
+            return rowCounterForLevel;
+        }
     }
-
-    public void DropGrid(int rowRemoved)
+    public void LowerGrid(int rowRemoved)
     {
         for(int y = rowRemoved; y > 0 ; y--)
         {
@@ -149,15 +140,16 @@ class TetrisGrid
         return canRotateRight;
     }
 
-    public void GameOverCollision(Blocks block)
+    public bool GameOverCollision(Blocks block)
     {
         for(int x = 0; x < Width; x++)
         {
             if (collisionGrid[0,x] && !CanMoveDown(block))
             {
-                //gamestate gameover
+                return true;
             }
         }
+        return false;
     }
 
 
@@ -257,6 +249,7 @@ class TetrisGrid
     /// <param name="spriteBatch">The SpriteBatch used for drawing sprites and text.</param>
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Blocks block)
     {
+
         for (int i = 0; i < Height; i++)
         {
             for (int t = 0; t < Width; t++)

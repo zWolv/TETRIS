@@ -1,6 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
+using System.Diagnostics;
+using TetrisTemplate;
 
 /// <summary>
 /// A class for representing the game world.
@@ -8,10 +12,11 @@ using System;
 /// </summary>
 class GameWorld
 {
+    const int blockVariations = 3;
     /// <summary>
     /// An enum for the different game states that the game can have.
     /// </summary>
-    enum GameState
+    enum GameStates
     {
         Menu,
         Playing,
@@ -29,10 +34,10 @@ class GameWorld
 
     double previousGameTime = 0;
 
-/// <summary>
-/// The main font of the game.
-/// </summary>
-SpriteFont font;
+    /// <summary>
+    /// The main font of the game.
+    /// </summary>
+    SpriteFont font;
 
     /// <summary>
     /// The current game state.
@@ -47,56 +52,74 @@ SpriteFont font;
     //block
     Blocks block;
 
+    //Gameinfo
+    GameInfo gameInfo;
+
     public GameWorld()
     {
         random = new Random();
-        gameState = GameState.Playing;
+        gameState = GameStates.Menu;
 
         font = TetrisGame.ContentManager.Load<SpriteFont>("SpelFont");
 
         grid = new TetrisGrid();
         block = new Blocks();
-        block = block.CreateBlock(random.Next(8));
+        block = block.CreateBlock(random.Next(blockVariations + 1));
+        gameInfo = new GameInfo();
     }
 
     public void HandleInput(GameTime gameTime, InputHelper inputHelper)
     {
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.D) && grid.CanRotateRight(block))
+
+        switch(gameState)
         {
-            block.RotateRight();
-        }
+            case GameStates.Playing:
+                if (inputHelper.KeyPressed(Keys.D) && grid.CanRotateRight(block))
+                {
+                    block.RotateRight();
+                }
 
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.A) && grid.CanRotateLeft(block))
-        {
-            block.RotateLeft();
-        }
+                if (inputHelper.KeyPressed(Keys.A) && grid.CanRotateLeft(block))
+                {
+                    block.RotateLeft();
+                }
 
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Left) && grid.CanMoveLeft(block))
-        {
-            block.MoveLeft();
-        }
+                if (inputHelper.KeyPressed(Keys.Left) && grid.CanMoveLeft(block))
+                {
+                    block.MoveLeft();
+                }
 
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Right) && grid.CanMoveRight(block))
-        {
+                if (inputHelper.KeyPressed(Keys.Right) && grid.CanMoveRight(block))
+                {
 
-            block.MoveRight();
-        }
+                    block.MoveRight();
+                }
 
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Space))
-        {
-            while (grid.CanMoveDown(block))
-            { 
-                block.MoveDown();
-            }
+                if (inputHelper.KeyPressed(Keys.Space))
+                {
+                    while (grid.CanMoveDown(block))
+                    {
+                        block.MoveDown();
+                    }
 
-            grid.addToGrid(block);
-            block = block.CreateBlock(random.Next(8));
-        }
+                    grid.AddToGrid(block);
+                    block = block.CreateBlock(random.Next(blockVariations + 1));
+                }
 
-        //temporary
-        if (inputHelper.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Down) && grid.CanMoveDown(block))
-        {
-            block.MoveDown();
+                //temporary
+                if (inputHelper.KeyPressed(Keys.Down) && grid.CanMoveDown(block))
+                {
+                    block.MoveDown();
+                }
+                break;
+            case GameStates.Menu:
+                // menu knoppen etc
+                break;
+            case GameStates.GameOver:
+                // terug naar menu knop
+                break;
+            default:
+                break;
         }
     }
 
@@ -113,25 +136,59 @@ SpriteFont font;
             return false;
         }
     }
+
     public void Update(GameTime gameTime)
     {
-        if(checkIfTimeElapsed(gameTime,timeBetweenDrops, grid.CanMoveDown(block)))
-        {
-            block.MoveDown();
-        }
 
-        if (checkIfTimeElapsed(gameTime, timeUntilAddedToGrid, !grid.CanMoveDown(block)))
+        switch(gameState)
         {
-            grid.addToGrid(block);
-            block = block.CreateBlock(random.Next(8));
+            case GameStates.Playing:
+                if (checkIfTimeElapsed(gameTime, timeBetweenDrops, grid.CanMoveDown(block)))
+                {
+                    block.MoveDown();
+                }
+
+                if (checkIfTimeElapsed(gameTime, timeUntilAddedToGrid, !grid.CanMoveDown(block)))
+                {
+                    grid.AddToGrid(block);
+                    block = block.CreateBlock(random.Next(blockVariations + 1));
+                }
+
+                grid.CheckRow(ref gameInfo.scoreRows);
+                gameInfo.UpdateScore();
+                gameInfo.UpdateLevel(grid.getLevelRows);
+                if (grid.GameOverCollision(block))
+                {
+                    gameState = GameStates.GameOver;
+                }
+                break;
+            case GameStates.GameOver:
+                break;
+            case GameStates.Menu:
+                break;
+            default:
+                break;
         }
     }
 
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-        spriteBatch.Begin();
-        grid.Draw(gameTime, spriteBatch, block);
-        spriteBatch.End();
+        switch(gameState)
+        {
+            case GameStates.Playing:
+                spriteBatch.Begin();
+                grid.Draw(gameTime, spriteBatch, block);
+                gameInfo.Draw(spriteBatch);
+                spriteBatch.End();
+                break;
+            case GameStates.GameOver:
+                break;
+            case GameStates.Menu:
+                break;
+            default:
+                break;
+        }
+        
     }
 
 

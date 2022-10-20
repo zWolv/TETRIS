@@ -1,24 +1,47 @@
-﻿using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TetrisTemplate
 {
-    internal class GameInfo
+    class GameInfo
     {
         private SpriteFont scoreDisplay;
-        public void LoadContent(ContentManager content)
+        public int scoreRows = 0;
+        int score = 0;
+        int level = 1;
+        int previousLevelRows = 0;
+
+        public GameInfo()
         {
-            //scoreDisplay = content.Load<SpriteFont>();
+            scoreDisplay = TetrisGame.ContentManager.Load<SpriteFont>("SpelFont");
         }
+            
         
-        public void scoreUpdate()
+        
+        public void UpdateScore()
         {
-        
+            if(scoreRows > 0)
+            {
+                score += (int)Math.Pow((double)scoreRows,(double)2) * 10 * level;
+            }
+
+            scoreRows = 0;
+        }
+
+        public void UpdateLevel(int levelRows)
+        {
+            if(levelRows >= previousLevelRows + 10)
+            {
+                previousLevelRows = levelRows;
+                level += 1;
+            }
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.DrawString(scoreDisplay, "Score: " + score.ToString(), new Vector2(400f,200f), Color.Black);
+            spriteBatch.DrawString(scoreDisplay, "Level: " + level.ToString(), new Vector2(400f, 220f), Color.Black);
         }
     }
 }
