@@ -40,7 +40,6 @@ namespace TetrisTemplate
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(scoreDisplay, "Score: " + score.ToString(), new Vector2(400f,200f), Color.Black);
             spriteBatch.DrawString(scoreDisplay, "Level: " + level.ToString(), new Vector2(400f, 220f), Color.Black);
         }
     }

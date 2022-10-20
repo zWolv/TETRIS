@@ -12,7 +12,7 @@ using TetrisTemplate;
 /// </summary>
 class GameWorld
 {
-    const int blockVariations = 3;
+    const int blockVariations = 7;
     /// <summary>
     /// An enum for the different game states that the game can have.
     /// </summary>
@@ -42,7 +42,7 @@ class GameWorld
     /// <summary>
     /// The current game state.
     /// </summary>
-    GameState gameState;
+    GameStates gameState;
 
     /// <summary>
     /// The main grid of the game.
@@ -55,6 +55,8 @@ class GameWorld
     //Gameinfo
     GameInfo gameInfo;
 
+    Menu menu;
+
     public GameWorld()
     {
         random = new Random();
@@ -66,6 +68,7 @@ class GameWorld
         block = new Blocks();
         block = block.CreateBlock(random.Next(blockVariations + 1));
         gameInfo = new GameInfo();
+        menu = new Menu();
     }
 
     public void HandleInput(GameTime gameTime, InputHelper inputHelper)
@@ -114,6 +117,11 @@ class GameWorld
                 break;
             case GameStates.Menu:
                 // menu knoppen etc
+                if (inputHelper.KeyPressed(Keys.Enter))
+                {
+                    gameState = GameStates.Playing;
+                }
+
                 break;
             case GameStates.GameOver:
                 // terug naar menu knop
@@ -179,6 +187,7 @@ class GameWorld
                 spriteBatch.Begin();
                 grid.Draw(gameTime, spriteBatch, block);
                 gameInfo.Draw(spriteBatch);
+                menu.Draw(spriteBatch);
                 spriteBatch.End();
                 break;
             case GameStates.GameOver:
