@@ -72,43 +72,42 @@ class Block
 
     public void RotateRight()
     {
-        bool[,] tempLayout = new bool[this.layout.GetLength(yLength), this.layout.GetLength(xLength)];
+        bool[,] tempLayout = new bool[layout.GetLength(yLength), layout.GetLength(xLength)];
 
 
-        for (int x = 0; x < this.layout.GetLength(xLength); x++)
+        for (int x = 0; x < layout.GetLength(xLength); x++)
         {
-            for (int y = 0; y < this.layout.GetLength(yLength); y++)
+            for (int y = 0; y < layout.GetLength(yLength); y++)
             {
-                tempLayout[x, y] = this.layout[(this.layout.GetLength(yLength) - 1) - y, x];
+                tempLayout[x, y] = layout[(layout.GetLength(yLength) - 1) - y, x];
             }
         }
-        this.layout = tempLayout;
+        layout = tempLayout;
     }
 
     public void RotateLeft()
     {
-        bool[,] tempLayout = new bool[this.layout.GetLength(1), this.layout.GetLength(0)];
+        bool[,] tempLayout = new bool[layout.GetLength(1), layout.GetLength(0)];
 
-        for (int x = 0; x < this.layout.GetLength(1); x++)
+        for (int x = 0; x < layout.GetLength(1); x++)
         {
-            for (int y = 0; y < this.layout.GetLength(0); y++)
+            for (int y = 0; y < layout.GetLength(0); y++)
             {
-                tempLayout[x, y] = this.layout[y, (this.layout.GetLength(xLength) - 1) - x];
+                tempLayout[x, y] = layout[y, (layout.GetLength(xLength) - 1) - x];
             }
         }
-
-        this.layout = tempLayout;
+        layout = tempLayout;
     }
 
     public virtual void Draw(SpriteBatch spriteBatch, Texture2D texture)
     {
-        for (int y = 0; y < this.layout.GetLength(yLength); y++)
+        for (int y = 0; y < layout.GetLength(yLength); y++)
         {
-            for (int x = 0; x < this.layout.GetLength(xLength); x++)
+            for (int x = 0; x < layout.GetLength(xLength); x++)
             {
-                if (this.layout[y, x])
+                if (layout[y, x])
                 {
-                    spriteBatch.Draw(texture, new Vector2((float)(blockPosition.X + x) * cellWidth, (float)(blockPosition.Y + y) * cellWidth), this.blockColor);
+                    spriteBatch.Draw(texture, new Vector2((float)(blockPosition.X + x) * cellWidth, (float)(blockPosition.Y + y) * cellWidth), blockColor);
                 }
             }
         }
@@ -128,8 +127,8 @@ class L : Block {
     public L(Vector2 blockPos)
     :base(blockPos)
     {
-        this.blockColor = colorL;
-        this.layout = layoutL;
+        blockColor = colorL;
+        layout = layoutL;
     }
 }
 
@@ -147,8 +146,8 @@ class J : Block
     public J(Vector2 blockPos)
     :base(blockPos)
     {
-        this.blockColor = colorJ;
-        this.layout = layoutJ;
+        blockColor = colorJ;
+        layout = layoutJ;
     }
 }
 
@@ -165,8 +164,8 @@ class O : Block
     public O(Vector2 blockPos)
     :base(blockPos)
     {
-        this.blockColor = colorO;
-        this.layout = layoutO;
+        blockColor = colorO;
+        layout = layoutO;
     }
 }
 
@@ -185,8 +184,8 @@ class I : Block
     public I(Vector2 blockPos)
     :base(blockPos)
     {
-        this.blockColor = colorI;
-        this.layout = layoutI;
+        blockColor = colorI;
+        layout = layoutI;
     }
 }
 
@@ -204,8 +203,8 @@ class S : Block
     public S(Vector2 blockPos)
     :base(blockPos)
     {
-        this.blockColor = colorS;
-        this.layout = layoutS;
+        blockColor = colorS;
+        layout = layoutS;
     }
 }
 
@@ -223,8 +222,8 @@ class Z : Block
     public Z(Vector2 blockPos)
     :base(blockPos)
     {
-        this.blockColor = colorZ;
-        this.layout = layoutZ;
+        blockColor = colorZ;
+        layout = layoutZ;
     }
 }
 
@@ -242,8 +241,8 @@ class T : Block
     public T(Vector2 blockPos)
     :base(blockPos)
     {
-        this.blockColor = colorT;
-        this.layout = layoutT;
+        blockColor = colorT;
+        layout = layoutT;
     }
 }
 
@@ -262,7 +261,7 @@ class U : Block
     public U(Vector2 blockPos)
     :base(blockPos)
     {
-        this.blockColor = colorU;
-        this.layout = layoutU;
+        blockColor = colorU;
+        layout = layoutU;
     }
 }

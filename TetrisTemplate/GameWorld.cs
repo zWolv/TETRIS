@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -64,6 +66,7 @@ class GameWorld
         random = new Random();
         gameState = GameStates.Menu;
         previousGameState = GameStates.GameOver;
+        PlayMusic("backgroundMusic");
     }
 
     public Block GenerateRandomBlock(int blockType, Vector2 blockPosition)
@@ -99,6 +102,7 @@ class GameWorld
             switch (gameState)
             {
                 case GameStates.Playing:
+                    
                     gameInfo = new GameInfo();
                     grid = new TetrisGrid();
                     currentBlock = GenerateRandomBlock(random.Next(blockVariations + 1), currentBlockPosition);
@@ -114,6 +118,18 @@ class GameWorld
                     break;
             }
         }
+    }
+
+    public void PlayMusic(string assetName, bool repeat = true)
+    {
+        MediaPlayer.IsRepeating = repeat;
+        MediaPlayer.Play(TetrisGame.ContentManager.Load<Song>(assetName));
+    }
+
+    public void PlaySound(string assetName)
+    {
+        SoundEffect snd = TetrisGame.ContentManager.Load<SoundEffect>(assetName);
+        snd.Play();
     }
 
     public void levelSpeedup()
@@ -163,6 +179,7 @@ class GameWorld
                     }
 
                     grid.AddToGrid(currentBlock);
+                    PlaySound("addToGridSound");
                     currentBlock = futureBlock;
                     currentBlock.MoveToStartPosition();
                     futureBlock = GenerateRandomBlock(random.Next(blockVariations + 1), futureBlockPosition);
