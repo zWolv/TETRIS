@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Security.Cryptography;
 using TetrisTemplate;
 
@@ -23,6 +24,8 @@ class GameWorld
         Playing,
         GameOver
     }
+
+    const float speedScale = 0.65f;
     const int defaultTimeBetweenDrops = 1000;
     int timeBetweenDrops;
     const int timeUntilAddedToGrid = 2000;
@@ -62,6 +65,31 @@ class GameWorld
         gameState = GameStates.Playing;
     }
 
+    public Block GenerateRandomBlock(int blockType, Vector2 blockPosition)
+    {
+        switch (blockType)
+        {
+            case (0):
+                return new L(blockPosition);
+            case (1):
+                return new J(blockPosition);
+            case (2):
+                return new O(blockPosition);
+            case (3):
+               return new I(blockPosition);
+            case (4):
+                return new S(blockPosition);
+            case (5):
+                return new Z(blockPosition);
+            case (6):
+                return new T(blockPosition);
+            case (7):
+                return new U(blockPosition);
+            default:
+                return null;
+        }
+    }
+
     public void Initialize()
     {
         if(gameState != previousGameState)
@@ -72,8 +100,8 @@ class GameWorld
                 case GameStates.Playing:
                     gameInfo = new GameInfo();
                     grid = new TetrisGrid();
-                    currentBlock = new Block(currentBlockPosition, random.Next(blockVariations + 1));
-                    futureBlock = new Block(futureBlockPosition, random.Next(blockVariations + 1));
+                    currentBlock = GenerateRandomBlock(random.Next(blockVariations + 1), currentBlockPosition);
+                    futureBlock = GenerateRandomBlock(random.Next(blockVariations + 1), futureBlockPosition);
                     break;
                 case GameStates.Menu:
                     menu = new Menu();
@@ -85,15 +113,13 @@ class GameWorld
                     break;
             }
         }
-        
-        
     }
 
     public void levelSpeedup()
     {
-        if (gameInfo.getLevel != 1)
+        if ((int)gameInfo.getLevel * speedScale >= 1)
         {
-            timeBetweenDrops = defaultTimeBetweenDrops / (int)(gameInfo.getLevel * 0.65);
+            timeBetweenDrops = defaultTimeBetweenDrops / (int)(gameInfo.getLevel * speedScale);
         }
         else
         {
@@ -138,7 +164,7 @@ class GameWorld
                     grid.AddToGrid(currentBlock);
                     currentBlock = futureBlock;
                     currentBlock.MoveToStartPosition();
-                    futureBlock = new Block(futureBlockPosition, random.Next(blockVariations + 1));
+                    futureBlock = GenerateRandomBlock(random.Next(blockVariations + 1), futureBlockPosition);
                 }
 
                 //temporary
@@ -195,7 +221,7 @@ class GameWorld
                     grid.AddToGrid(currentBlock);
                     currentBlock = futureBlock;
                     currentBlock.MoveToStartPosition();
-                    futureBlock = new Block(futureBlockPosition, random.Next(blockVariations + 1));
+                    futureBlock = GenerateRandomBlock(random.Next(blockVariations + 1), futureBlockPosition);
                 }
 
                 grid.CheckRow(ref gameInfo.scoreRows);

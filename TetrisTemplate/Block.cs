@@ -1,9 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.ComponentModel;
-using System.Xml.Schema;
 
 class Block
 {
@@ -12,29 +8,31 @@ class Block
     protected const int xLength = 1;
     protected const int yLength = 0;
 
-    bool[,] _layout;
-    Color _blockColor;
+    protected bool[,] _layout = null;
+    protected Color _blockColor = Color.White;
+
     // Blocktypes
-    bool[,] layoutL = new bool[,] {
-            {false, true, false},
-            {false, true, false},
-            {false, true, true}
-        };
+    protected bool[,] layoutL = new bool[,]
+    {
+        {false, true, false},
+        {false, true, false},
+        {false, true, true}
+    };
 
-    bool[,] layoutJ = new bool[,]
-        {
-            {false, false, true},
-            {false, false, true},
-            {false, true, true}
-        };
+    protected bool[,] layoutJ = new bool[,]
+    {
+        {false, false, true},
+        {false, false, true},
+        {false, true, true}
+    };
 
-    bool[,] layoutO = new bool[,]
+    protected bool[,] layoutO = new bool[,]
     {
             {true, true},
             {true, true}
     };
 
-    bool[,] layoutI = new bool[,]
+    protected bool[,] layoutI = new bool[,]
     {
             {false, true, false, false},
             {false, true, false, false},
@@ -42,94 +40,49 @@ class Block
             {false, true, false, false}
     };
 
-    bool[,] layoutS = new bool[,]
+    protected bool[,] layoutS = new bool[,]
     {
             {false, true, false},
             {false, true, true},
             {false, false, true}
     };
 
-    bool[,] layoutZ = new bool[,]
+    protected bool[,] layoutZ = new bool[,]
     {
             {true, true, false},
             {false, true, true},
             {false, false, false}
     };
 
-    bool[,] layoutT = new bool[,]
+    protected bool[,] layoutT = new bool[,]
     {
             {false, true, false},
             { true, true, true},
             {false, false, false}
     };
 
-    bool[,] layoutU = new bool[,]
+    protected bool[,] layoutU = new bool[,]
     {
             {false, false, false},
             {true, false, true},
             {true, true, true}
     };
 
-
-
     //Blockcolors
-    Color colorL = Color.Orange;
-    Color colorJ = Color.DarkBlue;
-    Color colorO = Color.Yellow;
-    Color colorI = Color.LightBlue;
-    Color colorS = Color.LightGreen;
-    Color colorZ = Color.Red;
-    Color colorT = Color.Purple;
-    Color colorU = Color.Pink;
+    protected Color colorL = Color.Orange;
+    protected Color colorJ = Color.DarkBlue;
+    protected Color colorO = Color.Yellow;
+    protected Color colorI = Color.LightBlue;
+    protected Color colorS = Color.LightGreen;
+    protected Color colorZ = Color.Red;
+    protected Color colorT = Color.Purple;
+    protected Color colorU = Color.Pink;
 
-    public Block(Vector2 blockPos, int blockType)
-    // public Block(int blockType, Vector2 blockPos)
+    public Block(Vector2 blockPos)
     {
-        switch (blockType)
-        {
-            case (0):
-                blockPosition = blockPos;
-                _layout = layoutL;
-                _blockColor = colorL;
-                break;
-            case (1):
-                blockPosition = blockPos;
-                _layout = layoutJ;
-                _blockColor = colorJ;
-                break;
-            case (2):
-                blockPosition = blockPos;
-                _layout = layoutO;
-                _blockColor = colorO;
-                break;
-            case (3):
-                blockPosition = blockPos;
-                _layout = layoutT;
-                _blockColor = colorT;
-                break;
-            case (4):
-                blockPosition = blockPos;
-                _layout = layoutS;
-                _blockColor = colorS;
-                break;
-            case (5):
-                blockPosition = blockPos;
-                _layout = layoutZ;
-                _blockColor = colorZ;
-                break;
-            case (6):
-                blockPosition = blockPos;
-                _layout = layoutT;
-                _blockColor = colorT;
-                break;
-            case (7):
-                blockPosition = blockPos;
-                _layout = layoutU;
-                _blockColor = colorU;
-                break;
-            default:
-                break;
-        }
+        blockPosition = blockPos;
+        blockColor = _blockColor;
+        layout = _layout;
     }
 
     public bool[,] layout
@@ -138,17 +91,21 @@ class Block
         {
             return _layout;
         }
-        private set
+        protected set
         {
             _layout = value;
         }
     }
 
-    public virtual Color blockColor
+    public Color blockColor
     {
         get
         {
             return _blockColor;
+        }
+        protected set
+        {
+            _blockColor = value;
         }
     }
 
@@ -222,5 +179,92 @@ class Block
                 }
             }
         }
+    }
+}
+
+class L : Block
+{
+    public L(Vector2 blockPos)
+    :base(blockPos)
+    {
+        this.blockColor = colorL;
+        this.layout = layoutL;
+    }
+}
+
+class J : Block
+{
+
+    public J(Vector2 blockPos)
+    :base(blockPos)
+    {
+        this.blockColor = colorJ;
+        this.layout = layoutJ;
+    }
+}
+
+class O : Block
+{
+
+    public O(Vector2 blockPos)
+    :base(blockPos)
+    {
+        this.blockColor = colorO;
+        this.layout = layoutO;
+    }
+}
+
+class I : Block
+{
+
+    public I(Vector2 blockPos)
+    :base(blockPos)
+    {
+        this.blockColor = colorI;
+        this.layout = layoutI;
+    }
+}
+
+class S : Block
+{
+
+    public S(Vector2 blockPos)
+    :base(blockPos)
+    {
+        this.blockColor = colorS;
+        this.layout = layoutS;
+    }
+}
+
+class Z : Block
+{
+
+    public Z(Vector2 blockPos)
+    :base(blockPos)
+    {
+        this.blockColor = colorZ;
+        this.layout = layoutZ;
+    }
+}
+
+class T : Block
+{
+
+    public T(Vector2 blockPos)
+    :base(blockPos)
+    {
+        this.blockColor = colorT;
+        this.layout = layoutT;
+    }
+}
+
+class U : Block
+{
+
+    public U(Vector2 blockPos)
+    :base(blockPos)
+    {
+        this.blockColor = colorU;
+        this.layout = layoutU;
     }
 }
