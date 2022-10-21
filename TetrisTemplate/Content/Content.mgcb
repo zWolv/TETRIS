@@ -32,13 +32,6 @@
 /processorParam:TextureFormat=Compressed
 /build:SpelFont.spritefont
 
-#begin SpriteFont.spritefont
-/importer:FontDescriptionImporter
-/processor:LocalizedFontProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:SpriteFont.spritefont
-
 #begin Tetris.png
 /importer:TextureImporter
 /processor:TextureProcessor

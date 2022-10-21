@@ -19,15 +19,13 @@ namespace TetrisTemplate
         public Menu()
         {
             logo = TetrisGame.ContentManager.Load <Texture2D> ("Tetris");
-            font = TetrisGame.ContentManager.Load <SpriteFont> ("spriteFont");
+            font = TetrisGame.ContentManager.Load <SpriteFont> ("spelFont");
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            SpriteBatch.Begin();
-            spriteBatch.DrawString(font, "Press enter to play!", new Vector2(400f, 200f), Color.Black);
+            spriteBatch.DrawString(font, "Press enter to play", new Vector2(400f, 200f), Color.Black);
             spriteBatch.Draw(logo, new Vector2((float)TetrisGame.ScreenSize.X / 2, TetrisGame.ScreenSize.Y / 3), Color.White);
-            SpriteBatch.End();
         }
     }
 }

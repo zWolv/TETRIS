@@ -62,7 +62,8 @@ class GameWorld
     public GameWorld()
     {
         random = new Random();
-        gameState = GameStates.Playing;
+        gameState = GameStates.Menu;
+        previousGameState = GameStates.GameOver;
     }
 
     public Block GenerateRandomBlock(int blockType, Vector2 blockPosition)
@@ -206,7 +207,7 @@ class GameWorld
 
     public void Update(GameTime gameTime)
     {
-
+        Initialize();
         switch(gameState)
         {
             case GameStates.Playing:
@@ -256,7 +257,9 @@ class GameWorld
             case GameStates.GameOver:
                 break;
             case GameStates.Menu:
+                spriteBatch.Begin();
                 menu.Draw(spriteBatch);
+                spriteBatch.End();
                 break;
             default:
                 break;

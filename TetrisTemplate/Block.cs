@@ -11,73 +11,6 @@ class Block
     protected bool[,] _layout = null;
     protected Color _blockColor = Color.White;
 
-    // Blocktypes
-    protected bool[,] layoutL = new bool[,]
-    {
-        {false, true, false},
-        {false, true, false},
-        {false, true, true}
-    };
-
-    protected bool[,] layoutJ = new bool[,]
-    {
-        {false, false, true},
-        {false, false, true},
-        {false, true, true}
-    };
-
-    protected bool[,] layoutO = new bool[,]
-    {
-            {true, true},
-            {true, true}
-    };
-
-    protected bool[,] layoutI = new bool[,]
-    {
-            {false, true, false, false},
-            {false, true, false, false},
-            {false, true, false, false},
-            {false, true, false, false}
-    };
-
-    protected bool[,] layoutS = new bool[,]
-    {
-            {false, true, false},
-            {false, true, true},
-            {false, false, true}
-    };
-
-    protected bool[,] layoutZ = new bool[,]
-    {
-            {true, true, false},
-            {false, true, true},
-            {false, false, false}
-    };
-
-    protected bool[,] layoutT = new bool[,]
-    {
-            {false, true, false},
-            { true, true, true},
-            {false, false, false}
-    };
-
-    protected bool[,] layoutU = new bool[,]
-    {
-            {false, false, false},
-            {true, false, true},
-            {true, true, true}
-    };
-
-    //Blockcolors
-    protected Color colorL = Color.Orange;
-    protected Color colorJ = Color.DarkBlue;
-    protected Color colorO = Color.Yellow;
-    protected Color colorI = Color.LightBlue;
-    protected Color colorS = Color.LightGreen;
-    protected Color colorZ = Color.Red;
-    protected Color colorT = Color.Purple;
-    protected Color colorU = Color.Pink;
-
     public Block(Vector2 blockPos)
     {
         blockPosition = blockPos;
@@ -182,8 +115,16 @@ class Block
     }
 }
 
-class L : Block
-{
+class L : Block {
+
+    bool[,] layoutL = new bool[,]
+    {
+        {false, true, false},
+        {false, true, false},
+        {false, true, true}
+    };
+
+    Color colorL = Color.Orange;
     public L(Vector2 blockPos)
     :base(blockPos)
     {
@@ -194,6 +135,14 @@ class L : Block
 
 class J : Block
 {
+    bool[,] layoutJ = new bool[,]
+    {
+        {false, false, true},
+        {false, false, true},
+        {false, true, true}
+    };
+
+    Color colorJ = Color.DarkBlue;
 
     public J(Vector2 blockPos)
     :base(blockPos)
@@ -205,6 +154,13 @@ class J : Block
 
 class O : Block
 {
+    protected bool[,] layoutO = new bool[,]
+    {
+        {true, true},
+        {true, true}
+    };
+
+    Color colorO = Color.Yellow;
 
     public O(Vector2 blockPos)
     :base(blockPos)
@@ -216,6 +172,15 @@ class O : Block
 
 class I : Block
 {
+    bool[,] layoutI = new bool[,]
+    {
+        {false, true, false, false},
+        {false, true, false, false},
+        {false, true, false, false},
+        {false, true, false, false}
+    };
+
+    Color colorI = Color.LightBlue;
 
     public I(Vector2 blockPos)
     :base(blockPos)
@@ -227,6 +192,14 @@ class I : Block
 
 class S : Block
 {
+    bool[,] layoutS = new bool[,]
+    {
+        {false, true, false},
+        {false, true, true},
+        {false, false, true}
+    };
+
+    Color colorS = Color.LightGreen;
 
     public S(Vector2 blockPos)
     :base(blockPos)
@@ -238,6 +211,14 @@ class S : Block
 
 class Z : Block
 {
+    bool[,] layoutZ = new bool[,]
+    {
+        {true, true, false},
+        {false, true, true},
+        {false, false, false}
+    };
+
+    Color colorZ = Color.Red;
 
     public Z(Vector2 blockPos)
     :base(blockPos)
@@ -249,6 +230,14 @@ class Z : Block
 
 class T : Block
 {
+    bool[,] layoutT = new bool[,]
+    {
+        {false, true, false},
+        { true, true, true},
+        {false, false, false}
+    };
+
+    Color colorT = Color.Purple;
 
     public T(Vector2 blockPos)
     :base(blockPos)
@@ -260,6 +249,15 @@ class T : Block
 
 class U : Block
 {
+
+    bool[,] layoutU = new bool[,]
+    {
+        {false, false, false},
+        {true, false, true},
+        {true, true, true}
+    };
+
+    Color colorU = Color.Pink;
 
     public U(Vector2 blockPos)
     :base(blockPos)
