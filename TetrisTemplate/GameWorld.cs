@@ -187,12 +187,12 @@ class GameWorld
                 spriteBatch.Begin();
                 grid.Draw(gameTime, spriteBatch, block);
                 gameInfo.Draw(spriteBatch);
-                menu.Draw(spriteBatch);
                 spriteBatch.End();
                 break;
             case GameStates.GameOver:
                 break;
             case GameStates.Menu:
+                menu.Draw(spriteBatch);
                 break;
             default:
                 break;
