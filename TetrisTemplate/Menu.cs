@@ -24,8 +24,8 @@ namespace TetrisTemplate
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(font, "Press enter to play", new Vector2(400f, 200f), Color.Black);
-            spriteBatch.Draw(logo, new Vector2((float)TetrisGame.ScreenSize.X / 2, TetrisGame.ScreenSize.Y / 3), Color.White);
+            spriteBatch.DrawString(font, "Press enter to play!", new Vector2(TetrisGame.ScreenSize.X / 3, TetrisGame.ScreenSize.Y / 2), Color.Black);
+            //spriteBatch.Draw(logo, new Vector2((float)TetrisGame.ScreenSize.X / 2, TetrisGame.ScreenSize.Y / 2), Color.White);
         }
     }
 }
