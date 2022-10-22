@@ -46,8 +46,8 @@ class GameInfo
 
     public void Draw(SpriteBatch spriteBatch)
     {
-        spriteBatch.DrawString(scoreDisplay, "Score: " + score, new Vector2(400f, 200f), textColor);
-        spriteBatch.DrawString(scoreDisplay, "Level: " + level.ToString(), new Vector2(400f, 220f), textColor);
+        spriteBatch.DrawString(scoreDisplay, "Score: " + score, new Vector2(400f, 240f), textColor);
+        spriteBatch.DrawString(scoreDisplay, "Level: " + level.ToString(), new Vector2(400f, 270f), textColor);
     }
 }
 

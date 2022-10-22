@@ -6,9 +6,9 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.Security.Cryptography;
 using TetrisTemplate;
+
 
 /// <summary>
 /// A class for representing the game world.
@@ -41,6 +41,8 @@ class GameWorld
     Vector2 currentBlockPosition = new Vector2(4, 0);
     double previousGameTime = 0;
 
+    private SpriteFont endText;
+
     /// <summary>
     /// The current game state.
     /// </summary>
@@ -67,6 +69,7 @@ class GameWorld
         gameState = GameStates.Menu;
         previousGameState = GameStates.GameOver;
         PlayMusic("backgroundMusic");
+        endText = TetrisGame.ContentManager.Load<SpriteFont>("SpelFont");
     }
 
     public Block GenerateRandomBlock(int blockType, Vector2 blockPosition)
@@ -108,7 +111,7 @@ class GameWorld
                     currentBlock = GenerateRandomBlock(random.Next(blockVariations + 1), currentBlockPosition);
                     futureBlock = GenerateRandomBlock(random.Next(blockVariations + 1), futureBlockPosition);
                     break;
-                case GameStates.Menu:
+                case GameStates.Menu:                   
                     menu = new Menu();
                     break;
                 case GameStates.GameOver:
@@ -202,6 +205,10 @@ class GameWorld
                 break;
             case GameStates.GameOver:
                 // terug naar menu knop
+                if (inputHelper.KeyPressed(Keys.Enter))
+                {
+                    gameState = GameStates.Playing;
+                }
                 break;
             default:
                 break;
@@ -272,6 +279,12 @@ class GameWorld
                 spriteBatch.End();
                 break;
             case GameStates.GameOver:
+                spriteBatch.Begin();
+                spriteBatch.DrawString(endText, "Game over!", new Vector2(400f, 100f), Color.Black);
+                spriteBatch.DrawString(endText, "Press Enter to play again", new Vector2(400f, 130f), Color.Black);
+                grid.Draw(gameTime, spriteBatch, currentBlock);
+                gameInfo.Draw(spriteBatch);
+                spriteBatch.End();
                 break;
             case GameStates.Menu:
                 spriteBatch.Begin();

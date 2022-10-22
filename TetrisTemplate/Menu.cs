@@ -16,6 +16,7 @@ namespace TetrisTemplate
 
         public Texture2D logo;
         public SpriteFont font;
+
         public Menu()
         {
             logo = TetrisGame.ContentManager.Load <Texture2D> ("Tetris");
@@ -24,8 +25,8 @@ namespace TetrisTemplate
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(font, "Press enter to play!", new Vector2(TetrisGame.ScreenSize.X / 3, TetrisGame.ScreenSize.Y / 2), Color.Black);
-            //spriteBatch.Draw(logo, new Vector2((float)TetrisGame.ScreenSize.X / 2, TetrisGame.ScreenSize.Y / 2), Color.White);
+            spriteBatch.DrawString(font, "Press enter to play!", new Vector2(TetrisGame.ScreenSize.X / 3, TetrisGame.ScreenSize.Y - 150), Color.Black);
+            spriteBatch.Draw(logo, new Vector2((float)TetrisGame.ScreenSize.X / 9, 10), Color.White);
         }
     }
 }
