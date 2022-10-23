@@ -126,6 +126,7 @@ class GameWorld
     public void PlayMusic(string assetName, bool repeat = true)
     {
         MediaPlayer.IsRepeating = repeat;
+        MediaPlayer.Volume = 0.05f;
         MediaPlayer.Play(TetrisGame.ContentManager.Load<Song>(assetName));
     }
     
@@ -133,6 +134,7 @@ class GameWorld
     public void PlaySound(string assetName)
     {
         SoundEffect snd = TetrisGame.ContentManager.Load<SoundEffect>(assetName);
+        MediaPlayer.Volume = 0.7f;
         snd.Play();
     }
 
