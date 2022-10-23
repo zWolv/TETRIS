@@ -1,4 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿// onderdeel van de TetrisTemplate
+// geen wijzigingen gemaakt
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 /// <summary>

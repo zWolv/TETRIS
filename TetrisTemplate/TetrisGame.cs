@@ -1,8 +1,11 @@
+// onderdeel van de TetrisTemplate
+// edits van Thomas van Egmond en Steijn Hoks
+//           8471533              5002311
+
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
-using TetrisTemplate;
 
 class TetrisGame : Game
 {

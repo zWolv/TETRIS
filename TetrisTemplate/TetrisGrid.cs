@@ -1,41 +1,47 @@
-﻿using Microsoft.Xna.Framework;
+﻿// onderdeel van de TetrisTemplate
+// edits van Thomas van Egmond en Steijn Hoks
+//           8471533              5002311
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-/// <summary>
-/// A class for representing the Tetris playing grid.
-/// </summary>
 class TetrisGrid
 {
-    public bool[,] collisionGrid = new bool[20, 10];
+    //het grid voor de game
     public Color[,] colorGrid = new Color[20, 10];
 
+    // de standaardkleur voor het grid
+    Color defaultColor = Color.White;
+
+    // constantes voor de GetLength functie van arrays
     const int yLength = 0;
     const int xLength = 1;
+    // constante hoogte en breedte van een grid-blok
     const int cellSize = 30;
 
+    // counter voor hoeveel rijen er in totaal tijdens een spel zijn gescoord
     int rowCounterForLevel = 0;
 
-    /// The sprite of a single empty cell in the grid.
+    // sprite voor een enkel blok in een grid
     Texture2D emptyCell;
 
-    /// The position at which this TetrisGrid should be drawn.
-    Vector2 position;
-
-    /// The number of grid elements in the x-direction.
+    // de breedte van het grid in blokken
     public int Width { get { return 10; } }
 
-    /// The number of grid elements in the y-direction.
+    // de hoogte van het grid in blokken
     public int Height { get { return 20; } }
-    /// <summary>
-    /// Creates a new TetrisGrid.
-    /// </summary>
-    /// <param name="b"></param>
+    
+
     public TetrisGrid()
     {
+        // initialiseer de sprite voor een blok
         emptyCell = TetrisGame.ContentManager.Load<Texture2D>("block");
-        position = Vector2.Zero;
+
+        //maak het grid schoon
         Clear();
     }
+
+    // voeg een blok toe aan het grid
     public void AddToGrid(Block block)
     {
             for (int y = 0; y < block.layout.GetLength(yLength); y++)
@@ -44,7 +50,6 @@ class TetrisGrid
                 {
                     if (block.layout[y, x])
                     {
-                        collisionGrid[(int)block.getBlockPosition.Y + y, (int)block.getBlockPosition.X + x] = true;
                         colorGrid[(int)block.getBlockPosition.Y + y, (int)block.getBlockPosition.X + x] = block.blockColor;
                     }
                 }
@@ -52,6 +57,8 @@ class TetrisGrid
             block.MoveToStartPosition();
     }
 
+
+    // check of er collision aanwezig is op de nieuwe positie van een blok
     public bool CheckCollision(Block block, Vector2 newPosition)
     {
         for (int y = 0; y < block.layout.GetLength(yLength); y++)
@@ -67,7 +74,7 @@ class TetrisGrid
                         && gridBlockPixelPositionY >= 0 
                         && gridBlockPixelPositionY < Height)
                     {                   
-                        if(collisionGrid[gridBlockPixelPositionY, gridBlockPixelPositionX])
+                        if(colorGrid[gridBlockPixelPositionY, gridBlockPixelPositionX] != defaultColor)
                         {
                             return true;
                         }    
@@ -81,6 +88,8 @@ class TetrisGrid
         }
         return false;
     }
+
+    // kijk of er volle rijen zijn, en pas het grid aan als die er zijn
     public void CheckRow(ref int scoreRows)
     {
         int counter = 0;
@@ -90,7 +99,7 @@ class TetrisGrid
             counter = 0;
             for (int x = 0; x < Width; x++)
             {
-                if (!collisionGrid[y, x])
+                if (colorGrid[y, x] == defaultColor)
                 {
                     break;
                 }
@@ -109,6 +118,7 @@ class TetrisGrid
         scoreRows = rowCounterForScore;
     }
 
+    // property voor de texture (Block class heeft geen eigen texture maar gebruikt dezelfde)
     public Texture2D getTexture
     {
         get
@@ -116,6 +126,8 @@ class TetrisGrid
             return emptyCell;
         }
     }
+
+    // property voor totaal aantal rijen gescoord
     public int getLevelRows
     {
         get
@@ -123,18 +135,21 @@ class TetrisGrid
             return rowCounterForLevel;
         }
     }
+
+    // duw het grid een positie omlaag tot aan de rij die vol was
     public void LowerGrid(int rowRemoved)
     {
         for(int y = rowRemoved; y > 0 ; y--)
         {
             for(int x = 0; x < Width; x++)
             {
-                    collisionGrid[y, x] = collisionGrid[y - 1, x];
                     colorGrid[y, x] = colorGrid[y - 1, x];
             }
         }
     }
 
+
+    // check of de naar rechts gedraaide versie van een  blok collision heeft
     public bool CanRotateRight(Block block)
     {
         bool canRotateRight = true;
@@ -147,19 +162,36 @@ class TetrisGrid
         return canRotateRight;
     }
 
+    // maak alle geplaatste blokken grijs bij gameover
+    public void GameOverGrayout()
+    {
+        for (int y = 0; y < Height; y++)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                if (colorGrid[y, x] != defaultColor)
+                {
+                    colorGrid[y, x] = Color.Gray;
+                }
+            }
+        }
+    }
+
+    // check of de game over is
     public bool GameOverCollision(Block block)
     {
         for(int x = 0; x < Width; x++)
         {
-            if (collisionGrid[0,x] && CheckCollision(block, new Vector2(block.getBlockPosition.X, block.getBlockPosition.Y + 1)))
+            if (colorGrid[0,x] != defaultColor && CheckCollision(block, new Vector2(block.getBlockPosition.X, block.getBlockPosition.Y + 1)))
             {
+                GameOverGrayout();
                 return true;
             }
         }
         return false;
     }
 
-
+    // check of de naar links gedraaide versie van een blok collision heft
     public bool CanRotateLeft(Block block)
     {
         bool canRotateLeft = true;
@@ -172,7 +204,7 @@ class TetrisGrid
         return canRotateLeft;
     }
 
-
+    // check of een blok collision heeft -- CheckCollision() checkt voor een bepaalde positie van een blok, maar kan dus niet de gedraaide versie checken
     public bool RotateCollisionCheck(bool canRotate, Block block)
     {
         for (int x = 0; x < block.layout.GetLength(xLength); x++)
@@ -188,7 +220,7 @@ class TetrisGrid
                     || block.getBlockPosition.Y + y > Height - 1 
                     || block.getBlockPosition.X + x > Width - 1 
                     || block.getBlockPosition.Y + y < 0 
-                    || collisionGrid[(int)block.getBlockPosition.Y + y, (int)block.getBlockPosition.X + x])
+                    || colorGrid[(int)block.getBlockPosition.Y + y, (int)block.getBlockPosition.X + x] != defaultColor)
                 {
                     canRotate = false;
                 }
@@ -197,11 +229,7 @@ class TetrisGrid
         return canRotate;
     }
 
-    /// <summary>
-    /// Draws the grid on the screen.
-    /// </summary>
-    /// <param name="gameTime">An object with information about the time that has passed in the game.</param>
-    /// <param name="spriteBatch">The SpriteBatch used for drawing sprites and text.</param>
+    // tekent het grid aan de hand van de kleuren in colorGrid
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Block block)
     {
 
@@ -209,11 +237,11 @@ class TetrisGrid
         {
             for (int t = 0; t < Width; t++)
             {
-                if (!collisionGrid[i, t])
+                if (colorGrid[i,t] == defaultColor)
                 {
-                    spriteBatch.Draw(emptyCell, new Vector2((float)t * cellSize, (float)i * cellSize), Color.White);
+                    spriteBatch.Draw(emptyCell, new Vector2((float)t * cellSize, (float)i * cellSize), defaultColor);
                 }
-                else if (collisionGrid[i, t])
+                else if (colorGrid[i,t] != defaultColor)
                 {
                     spriteBatch.Draw(emptyCell, new Vector2((float)t * cellSize, (float)i * cellSize), colorGrid[i, t]);
                 }
@@ -222,13 +250,17 @@ class TetrisGrid
         
     }
 
-    /// <summary>
-    /// Clears the grid.
-    /// </summary>
+    // zet alle blokken in het grid naar de standaardkleur
     public void Clear()
     {
-        collisionGrid = new bool[Height, Width];
-        colorGrid = new Color[Height, Width];
+        for(int y = 0; y < Height; y++)
+        {
+            for(int x = 0; x < Width; x++)
+            {
+                colorGrid[y,x] = defaultColor;
+            }
+        }
+        
     }
 }
 
